@@ -124,6 +124,8 @@ set statusline+=%l
 set statusline+=/
 set statusline+=%L
 
+" turn of hilight
+nnoremap <space> :nohlsearch<cR>
 " upper/lower case
 inoremap <c-u> <esc>viwUi
 inoremap <c-l> <esc>viwui
@@ -135,9 +137,15 @@ nnoremap <leader>ev :split $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 nnoremap <leader>lev :split .vimrc<CR>
 nnoremap <leader>lsv :source .vimrc<CR>
+" source current buffer
+nnoremap <leader>ss :source %<CR>
 " quote word
 nnoremap <leader>2 viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 " inoremap <esc> <nop>
 inoremap kk <esc>
+" split open previous buffer
+nnoremap <leader>op :execute "below split " . bufname("#")<CR>
+" grep word under cursor
+" nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 

@@ -60,7 +60,7 @@ augroup c_style_autocmds
     autocmd FileType c setlocal cinoptions=:0t0g0l1
     autocmd FileType cpp setlocal cinoptions=:0t0g0l1
     " cscope stuff
-    autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'
+    autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
 augroup END
 
 " Make vim work with the 'crontab -e' command
@@ -129,16 +129,16 @@ nnoremap <space> :nohlsearch<cR>
 " upper/lower case
 inoremap <c-u> <esc>viwUi
 inoremap <c-l> <esc>viwui
-" goto start/end
-inoremap <c-e> <esc>ea
+" goto beginning/end
 inoremap <c-b> <esc>bi
+inoremap <c-e> <esc>ea
 " edit ~/.vimrc
-nnoremap <leader>ev :split $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
-nnoremap <leader>lev :split .vimrc<CR>
-nnoremap <leader>lsv :source .vimrc<CR>
+nnoremap <leader>rc :split $MYVIMRC<CR>
+nnoremap <leader>rcs :source $MYVIMRC<CR>
+nnoremap <leader>rcl :split .vimrc<CR>
+nnoremap <leader>rcls :source .vimrc<CR>
 " source current buffer
-nnoremap <leader>ss :source %<CR>
+nnoremap <leader>bs :source %<CR>
 " quote word
 nnoremap <leader>2 viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel

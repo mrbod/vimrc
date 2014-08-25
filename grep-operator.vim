@@ -1,19 +1,33 @@
-nnoremap <leader>q :set operatorfunc=<SID>GrepOperator<CR>g@
-vnoremap <leader>q :<c-u>call <SID>GrepOperator(visualmode())<CR>
+nnoremap <leader>q :set operatorfunc=<SID>GrepOperatorC<CR>g@
+vnoremap <leader>q :<c-u>call <SID>GrepOperatorC(visualmode())<CR>
 
-function! s:GrepOperator(type)
-    let saved_unnamed = @@
+nnoremap <leader>qc :set operatorfunc=<SID>GrepOperatorAll<CR>g@
+vnoremap <leader>qc :<c-u>call <SID>GrepOperatorAll(visualmode())<CR>
 
+function! s:YankIt(type)
     if a:type ==# 'v'
         execute "normal! `<v`>y"
     elseif a:type ==# 'char'
         execute "normal! `[v`]y"
     else
-        return
+        return 0
     endif
+    return 1
+endfunction
 
-    silent execute "grep! -R " . shellescape(@@) . " ."
+function! s:GrepOperatorAll(type)
+    let saved_unnamed = @@
+    if s:YankIt(a:type)
+        execute "grep! -R " . shellescape(@@) . " ."
+    endif
     let @@ = saved_unnamed
-    cwindow
+endfunction
+
+function! s:GrepOperatorC(type)
+    let saved_unnamed = @@
+    if s:YankIt(a:type)
+        execute "grep! " . shellescape(@@) . " *.[hc]"
+    endif
+    let @@ = saved_unnamed
 endfunction
 

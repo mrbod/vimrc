@@ -124,6 +124,8 @@ set statusline+=%l
 set statusline+=/
 set statusline+=%L
 
+" callgraph
+nnoremap <leader>cg :!callgraph <C-R><C-W> *.c \| dot -Tx11<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
 " upper/lower case

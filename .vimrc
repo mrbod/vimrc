@@ -2,8 +2,6 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-set encoding=utf8
-
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -22,13 +20,14 @@ endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-    syntax on
-    set hlsearch
+if has("gui_running")
+    if &t_Co > 2
+      syntax on
+      set hlsearch
+    endif
     set guioptions-=T
     set guioptions-=r
     set guioptions-=L
-
     if has("win32")
         set guifont=Source\ Code\ Pro\ Semibold:h14
     else
@@ -97,9 +96,6 @@ set exrc
 
 let dircolors_is_slackware = 1
 
-" pathogen
-"execute pathogen#infect()
-
 function! SetCursorColour()
     if &term =~ "xterm\\|rxvt"
         " use an orange cursor in insert mode
@@ -114,7 +110,7 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-let VCSCommandMapPrefix='<Leader><Leader>'
+execute pathogen#infect()
 
 set laststatus=2
 set statusline=%.30F
@@ -127,7 +123,7 @@ set statusline+=/
 set statusline+=%L
 
 " callgraph
-nnoremap <leader>cg :!callgraph <C-R><C-W> *.c \| dot -Tx11<CR>
+nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " quickfix shortcuts
 nnoremap <F4> :cn<CR>
 nnoremap [1;2S :cp<CR>
@@ -137,14 +133,14 @@ nnoremap <Leader>n :tnext<CR>
 nnoremap <Leader>p :tprev<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
+" set executable bit
+nnoremap <leader>x :!chmod +x %<cr>
 " upper/lower case
 inoremap <c-u> <esc>viwUi
 inoremap <c-l> <esc>viwui
 " goto beginning/end
 inoremap <c-b> <esc>bi
 inoremap <c-e> <esc>ea
-" set executable
-nnoremap <leader>x :!chmod +x %<cr>
 " edit ~/.vimrc
 nnoremap <leader>rc :split $MYVIMRC<CR>
 nnoremap <leader>rcs :source $MYVIMRC<CR>
@@ -157,7 +153,7 @@ nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 nnoremap <leader>2 viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 " inoremap <esc> <nop>
-inoremap kk <esc>
+inoremap <M-Space> <esc>
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor

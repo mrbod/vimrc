@@ -2,6 +2,8 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+set encoding=utf8
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -21,8 +23,18 @@ endif
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
+    syntax on
+    set hlsearch
+    set guioptions-=T
+    set guioptions-=r
+    set guioptions-=L
+
+    if has("win32")
+        set guifont=Source\ Code\ Pro\ Semibold:h14
+    else
+        set guifont=Source\ Code\ Pro\ Semibold\ 14
+    endif
+    colorscheme slate
 endif
 
 " Enable file type detection.
@@ -61,6 +73,7 @@ augroup c_style_autocmds
     autocmd FileType cpp setlocal cinoptions=:0t0g0l1
     " cscope stuff
     autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
+    autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
 augroup END
 
 " Make vim work with the 'crontab -e' command
@@ -74,21 +87,10 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
-colorscheme koehler
-
 " indentation
 set shiftwidth=4
 set softtabstop=4
 set expandtab
-
-" quickfix shortcuts
-noremap <F4> :cn<CR>
-noremap [1;2S :cp<CR>
-noremap <F9> :make<CR>
-
-" tag next/prev
-noremap <Leader>n :tnext<CR>
-noremap <Leader>p :tprev<CR>
 
 " execute local .vimrc
 set exrc
@@ -126,6 +128,13 @@ set statusline+=%L
 
 " callgraph
 nnoremap <leader>cg :!callgraph <C-R><C-W> *.c \| dot -Tx11<CR>
+" quickfix shortcuts
+nnoremap <F4> :cn<CR>
+nnoremap [1;2S :cp<CR>
+nnoremap <F9> :make<CR>
+" tag next/prev
+nnoremap <Leader>n :tnext<CR>
+nnoremap <Leader>p :tprev<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
 " upper/lower case
@@ -134,6 +143,8 @@ inoremap <c-l> <esc>viwui
 " goto beginning/end
 inoremap <c-b> <esc>bi
 inoremap <c-e> <esc>ea
+" set executable
+nnoremap <leader>x :!chmod +x %<cr>
 " edit ~/.vimrc
 nnoremap <leader>rc :split $MYVIMRC<CR>
 nnoremap <leader>rcs :source $MYVIMRC<CR>
@@ -141,6 +152,7 @@ nnoremap <leader>rcl :split .vimrc<CR>
 nnoremap <leader>rcls :source .vimrc<CR>
 " source current buffer
 nnoremap <leader>bs :source %<CR>
+nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 " quote word
 nnoremap <leader>2 viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel

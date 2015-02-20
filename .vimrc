@@ -21,10 +21,8 @@ endif
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")
-    if &t_Co > 2
-      syntax on
-      set hlsearch
-    endif
+    syntax on
+    set hlsearch
     set guioptions-=T
     set guioptions-=r
     set guioptions-=L
@@ -34,6 +32,9 @@ if has("gui_running")
         set guifont=Source\ Code\ Pro\ Semibold\ 14
     endif
     colorscheme slate
+elseif &t_Co > 2
+    syntax on
+    set hlsearch
 endif
 
 " Enable file type detection.
@@ -110,7 +111,7 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-execute pathogen#infect()
+"execute pathogen#infect()
 
 set laststatus=2
 set statusline=%.30F
@@ -125,9 +126,12 @@ set statusline+=%L
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " quickfix shortcuts
-nnoremap <F4> :cn<CR>
-nnoremap [1;2S :cp<CR>
-nnoremap <F9> :make<CR>
+nnoremap <F4> :cnext<CR>
+nnoremap <c-F4> :clast<CR>
+nnoremap [1;5S :clast<CR>
+nnoremap [1;2S :cprev<CR>
+nnoremap [1;6S :cfirst<CR>
+nnoremap <F7> :make<CR>
 " tag next/prev
 nnoremap <Leader>n :tnext<CR>
 nnoremap <Leader>p :tprev<CR>
@@ -157,5 +161,5 @@ inoremap <M-Space> <esc>
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
-" nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
+nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 

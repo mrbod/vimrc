@@ -28,10 +28,10 @@ if has("gui_running")
     set guioptions-=L
     if has("win32")
         set guifont=Source\ Code\ Pro\ Semibold:h14
+        colorscheme slate
     else
         set guifont=Source\ Code\ Pro\ Semibold\ 14
     endif
-    colorscheme slate
 elseif &t_Co > 2
     syntax on
     set hlsearch

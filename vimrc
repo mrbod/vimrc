@@ -111,7 +111,7 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-"execute pathogen#infect()
+execute pathogen#infect()
 
 set laststatus=2
 set statusline=%.30F
@@ -123,6 +123,19 @@ set statusline+=%l
 set statusline+=/
 set statusline+=%L
 
+" soft wrapped line movement
+nnoremap j gj
+nnoremap k gk
+" previous buffer
+nnoremap <C-e> :e#<CR>
+" buffer movement
+nnoremap <C-N> :bprev
+nnoremap <C-n> :bnext
+" window movement
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>w
+nnoremap <C-k> <C-w>W
+nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " quickfix shortcuts

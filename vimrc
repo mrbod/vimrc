@@ -18,6 +18,10 @@ if has('mouse')
   set mouse=a
 endif
 
+if has("win32")
+    set t_Co=256
+endif
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")

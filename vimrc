@@ -71,6 +71,12 @@ function! CSUP()
     execute ':cscope reset'
 endfunction
 
+augroup arduino_stuff
+    autocmd!
+    autocmd BufRead,BufNewFile *.pde set filetype=cpp
+    autocmd BufRead,BufNewFile *.ino set filetype=cpp
+augroup END
+
 augroup c_style_autocmds
     autocmd!
     autocmd FileType c setlocal cinoptions=:0t0g0l1
@@ -115,7 +121,9 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
+let g:pymode = 0
 execute pathogen#infect()
+execute pathogen#helptags()
 
 set laststatus=2
 set statusline=%.30F
@@ -171,7 +179,7 @@ nnoremap <leader>rcls :source .vimrc<CR>
 nnoremap <leader>bs :source %<CR>
 nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 " quote word
-nnoremap <leader>2 viw<esc>a"<esc>hbi"<esc>lel
+nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 " inoremap <esc> <nop>
 inoremap <M-Space> <esc>

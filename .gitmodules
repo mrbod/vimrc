@@ -1,0 +1,20 @@
+[submodule "Zenburn"]
+    path = bundle/Zenburn
+    url = https://github.com/jnurmine/Zenburn.git
+
+[submodule "nerdtree"]
+    path = bundle/nerdtree
+    url = https://github.com/scrooloose/nerdtree.git
+
+[submodule "vim-racket"]
+    path = bundle/vim-racket
+    url = https://github.com/wlangstroth/vim-racket
+
+[submodule "vim-colorschemes"]
+    path = bundle/vim-colorschemes
+    url = https://github.com/flazz/vim-colorschemes.git
+
+[submodule "python-mode"]
+    path = bundle/python-mode
+    url = git://github.com/klen/python-mode.git
+

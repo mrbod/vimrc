@@ -135,14 +135,17 @@ set statusline+=%l
 set statusline+=/
 set statusline+=%L
 
+" underline headings for example
+nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
+nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
 " soft wrapped line movement
 nnoremap j gj
 nnoremap k gk
 " previous buffer
 nnoremap <C-e> :e#<CR>
 " buffer movement
-nnoremap <C-N> :bprev
-nnoremap <C-n> :bnext
+nnoremap <C-S-n> :bprev<cr>
+nnoremap <C-n> :bnext<cr>
 " window movement
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>w

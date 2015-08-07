@@ -139,8 +139,8 @@ set statusline+=%L
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
 " soft wrapped line movement
-nnoremap j gj
-nnoremap k gk
+"nnoremap j gj
+"nnoremap k gk
 " previous buffer
 nnoremap <C-e> :e#<CR>
 " buffer movement
@@ -190,4 +190,6 @@ inoremap <M-Space> <esc>
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
 nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
+" indent buffer
+nnoremap <leader>= gg=G''zz
 

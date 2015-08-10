@@ -121,9 +121,16 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-let g:pymode = 0
-execute pathogen#infect()
-execute pathogen#helptags()
+if !has('nvim')
+    let g:pymode = 0
+    execute pathogen#infect()
+    execute pathogen#helptags()
+endif
+
+if has('nvim')
+    set clipboard+=unnamed
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
 
 set laststatus=2
 set statusline=%.30F
@@ -138,6 +145,8 @@ set statusline+=%L
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
+inoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>o
+inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 " soft wrapped line movement
 nnoremap j gj
 nnoremap k gk

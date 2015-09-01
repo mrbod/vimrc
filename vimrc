@@ -8,11 +8,11 @@ set backspace=indent,eol,start
 let mapleader = ","
 let maplocalleader = ","
 
-set backup		" keep a backup file
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+set backup              " keep a backup file
+set history=50          " keep 50 lines of command line history
+set ruler               " show the cursor position all the time
+set showcmd             " display incomplete commands
+set incsearch           " do incremental searching
 
 if has('mouse')
   set mouse=a
@@ -93,7 +93,7 @@ set backupskip+=/var/spool/cron/*
 " Only define it when not defined already.
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
+                  \ | wincmd p | diffthis
 endif
 
 " indentation
@@ -133,15 +133,16 @@ endif
 colorscheme slate
 colorscheme solarized
 
-" set laststatus=2
-" set statusline=%.30F
-" set statusline+=%m
-" set statusline+=%r
-" set statusline+=\ %y
-" set statusline+=%=
-" set statusline+=%l
-" set statusline+=/
-" set statusline+=%L
+set laststatus=2
+set statusline=%.30F
+set statusline+=%m
+set statusline+=%r
+set statusline+=\ %y
+set statusline+=%=
+set statusline+=%l
+set statusline+=/
+set statusline+=%L
+set statusline+=\ [%c%V]
 
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>

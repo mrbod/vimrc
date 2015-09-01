@@ -130,9 +130,6 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
-colorscheme slate
-colorscheme solarized
-
 set laststatus=2
 set statusline=%.30F
 set statusline+=%m
@@ -142,7 +139,7 @@ set statusline+=%=
 set statusline+=%l
 set statusline+=/
 set statusline+=%L
-set statusline+=\ [%c%V]
+set statusline+=\ [%v-%c]
 
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
@@ -205,3 +202,4 @@ nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) 
 " indent buffer
 nnoremap <leader>= gg=G''zz
 
+source colorscheme

@@ -202,4 +202,4 @@ nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) 
 " indent buffer
 nnoremap <leader>= gg=G''zz
 
-source colorscheme
+runtime colorscheme

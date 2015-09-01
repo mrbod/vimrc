@@ -32,7 +32,6 @@ if has("gui_running")
     set guioptions-=L
     if has("win32")
         set guifont=Source\ Code\ Pro\ Semibold:h14
-        colorscheme slate
     else
         set guifont=Source\ Code\ Pro\ Semibold\ 14
     endif
@@ -121,26 +120,28 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-if !has('nvim')
-    let g:pymode = 0
-    execute pathogen#infect()
-    execute pathogen#helptags()
-endif
+let g:pymode = 0
+execute pathogen#infect()
+execute pathogen#helptags()
 
 if has('nvim')
     set clipboard+=unnamed
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
-set laststatus=2
-set statusline=%.30F
-set statusline+=%m
-set statusline+=%r
-set statusline+=\ %y
-set statusline+=%=
-set statusline+=%l
-set statusline+=/
-set statusline+=%L
+colorscheme slate
+colorscheme solarized
+
+" set laststatus=2
+" set statusline=%.30F
+" set statusline+=%m
+" set statusline+=%r
+" set statusline+=\ %y
+" set statusline+=%=
+" set statusline+=%l
+" set statusline+=/
+" set statusline+=%L
 
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
@@ -167,6 +168,7 @@ nnoremap <F4> :cnext<CR>
 nnoremap <c-F4> :clast<CR>
 nnoremap [1;5S :clast<CR>
 nnoremap [1;2S :cprev<CR>
+nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
 nnoremap <F7> :make<CR>
 " tag next/prev

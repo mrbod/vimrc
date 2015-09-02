@@ -2,10 +2,6 @@
     path = bundle/Zenburn
     url = https://github.com/jnurmine/Zenburn.git
 
-[submodule "nerdtree"]
-    path = bundle/nerdtree
-    url = https://github.com/scrooloose/nerdtree.git
-
 [submodule "vim-racket"]
     path = bundle/vim-racket
     url = https://github.com/wlangstroth/vim-racket
@@ -17,3 +13,6 @@
 [submodule "bundle/vim-colorschemes"]
 	path = bundle/vim-colorschemes
 	url = https://github.com/flazz/vim-colorschemes.git
+[submodule "bundle/vim-vinegar"]
+	path = bundle/vim-vinegar
+	url = git://github.com/tpope/vim-vinegar.git

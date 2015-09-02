@@ -121,6 +121,7 @@ endfunction
 " call SetCursorColour()
 
 let g:pymode = 0
+let g:pymode_folding = 0
 execute pathogen#infect()
 execute pathogen#helptags()
 

@@ -1,7 +1,3 @@
-[submodule "Zenburn"]
-    path = bundle/Zenburn
-    url = https://github.com/jnurmine/Zenburn.git
-
 [submodule "vim-racket"]
     path = bundle/vim-racket
     url = https://github.com/wlangstroth/vim-racket

@@ -6,10 +6,6 @@
     path = bundle/vim-racket
     url = https://github.com/wlangstroth/vim-racket
 
-[submodule "python-mode"]
-    path = bundle/python-mode
-    url = git://github.com/klen/python-mode.git
-
 [submodule "bundle/vim-colorschemes"]
 	path = bundle/vim-colorschemes
 	url = https://github.com/flazz/vim-colorschemes.git

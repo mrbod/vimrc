@@ -22,6 +22,12 @@ if !has('nvim')
     set t_Co=256
 endif
 
+if has("win32")
+    let os = "Windows"
+else
+    let os = substitute(system('uname'), "\n", "", "")
+endif
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")
@@ -120,8 +126,9 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-let g:pymode = 0
-let g:pymode_folding = 0
+if has("win32") || (os == "Cygwin")
+    let g:pathogen_disabled=["YouCompleteMe"]
+endif
 execute pathogen#infect()
 execute pathogen#helptags()
 

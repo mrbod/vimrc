@@ -26,6 +26,9 @@ if has("win32")
     let os = "Windows"
 else
     let os = substitute(system('uname'), "\n", "", "")
+    if os =~ "CYGWIN.*"
+        let os = "Cygwin"
+    endif
 endif
 
 " Switch syntax highlighting on, when the terminal has colors

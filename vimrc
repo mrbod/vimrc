@@ -85,6 +85,8 @@ augroup arduino_stuff
     autocmd BufRead,BufNewFile *.ino set filetype=cpp
 augroup END
 
+autocmd CompleteDone * pclose
+
 augroup c_style_autocmds
     autocmd!
     autocmd FileType c setlocal cinoptions=:0t0g0l1
@@ -129,6 +131,10 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
+let g:ycm_show_diagnostics_ui = 0
+
+set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
+
 if has("win32") || (os == "Cygwin")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
@@ -142,16 +148,10 @@ if has('nvim')
 endif
 
 set laststatus=2
-set statusline=%.30F
-set statusline+=%m
-set statusline+=%r
-set statusline+=\ %y
-set statusline+=%=
-set statusline+=%l
-set statusline+=/
-set statusline+=%L
-set statusline+=\ [%v-%c]
+let g:airline_powerline_fonts = 1
 
+" open c/cpp header
+nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
@@ -180,6 +180,7 @@ nnoremap [1;2S :cprev<CR>
 nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
 nnoremap <F7> :make<CR>
+nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev
 nnoremap <Leader>n :tnext<CR>
 nnoremap <Leader>p :tprev<CR>

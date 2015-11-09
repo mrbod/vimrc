@@ -9,7 +9,6 @@ let mapleader = ","
 let maplocalleader = ","
 
 set backup              " keep a backup file
-set history=50          " keep 50 lines of command line history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
@@ -19,6 +18,7 @@ if has('mouse')
 endif
 
 if !has('nvim')
+    set history=50          " keep 50 lines of command line history
     set t_Co=256
 endif
 
@@ -205,6 +205,8 @@ nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
+inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
 " inoremap <esc> <nop>
 inoremap <M-Space> <esc>
 " split open previous buffer

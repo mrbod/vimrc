@@ -9,7 +9,6 @@ let mapleader = ","
 let maplocalleader = ","
 
 set backup              " keep a backup file
-set history=50          " keep 50 lines of command line history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
@@ -18,8 +17,18 @@ if has('mouse')
   set mouse=a
 endif
 
-if has("win32")
+if !has('nvim')
+    set history=50          " keep 50 lines of command line history
     set t_Co=256
+endif
+
+if has("win32")
+    let os = "Windows"
+else
+    let os = substitute(system('uname'), "\n", "", "")
+    if os =~ "CYGWIN.*"
+        let os = "Cygwin"
+    endif
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -76,6 +85,8 @@ augroup arduino_stuff
     autocmd BufRead,BufNewFile *.ino set filetype=cpp
 augroup END
 
+autocmd CompleteDone * pclose
+
 augroup c_style_autocmds
     autocmd!
     autocmd FileType c setlocal cinoptions=:0t0g0l1
@@ -122,31 +133,39 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
+<<<<<<< HEAD
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj
 
 let g:pymode = 0
 let g:pymode_folding = 0
 let g:ycm_show_diagnostics_ui = 0
+=======
+let g:ycm_show_diagnostics_ui = 0
+
+set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
+
+if has("win32") || (os == "Cygwin")
+    let g:pathogen_disabled=["YouCompleteMe"]
+endif
+>>>>>>> 0eae69260cb0e1d97945495fcf8e5d4d4ae9642f
 execute pathogen#infect()
 execute pathogen#helptags()
 
 if has('nvim')
     set clipboard+=unnamed
+<<<<<<< HEAD
     "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+=======
+    " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+>>>>>>> 0eae69260cb0e1d97945495fcf8e5d4d4ae9642f
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
 set laststatus=2
-set statusline=%.30F
-set statusline+=%m
-set statusline+=%r
-set statusline+=\ %y
-set statusline+=%=
-set statusline+=%l
-set statusline+=/
-set statusline+=%L
-set statusline+=\ [%v-%c]
+let g:airline_powerline_fonts = 1
 
+" open c/cpp header
+nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " underline headings for example
 nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
@@ -175,6 +194,7 @@ nnoremap [1;2S :cprev<CR>
 nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
 nnoremap <F7> :make<CR>
+nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev
 nnoremap <Leader>n :tnext<CR>
 nnoremap <Leader>p :tprev<CR>
@@ -199,6 +219,8 @@ nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
+inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
 " inoremap <esc> <nop>
 inoremap <M-Space> <esc>
 " split open previous buffer

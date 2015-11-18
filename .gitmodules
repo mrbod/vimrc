@@ -1,14 +1,6 @@
-[submodule "Zenburn"]
-    path = bundle/Zenburn
-    url = https://github.com/jnurmine/Zenburn.git
-
 [submodule "vim-racket"]
     path = bundle/vim-racket
     url = https://github.com/wlangstroth/vim-racket
-
-[submodule "python-mode"]
-    path = bundle/python-mode
-    url = git://github.com/klen/python-mode.git
 
 [submodule "bundle/vim-colorschemes"]
 	path = bundle/vim-colorschemes
@@ -18,4 +10,8 @@
 	url = git://github.com/tpope/vim-vinegar.git
 [submodule "bundle/YouCompleteMe"]
 	path = bundle/YouCompleteMe
+<<<<<<< HEAD
 	url = https://github.com/Valloric/YouCompleteMe.git
+=======
+	url = git@github.com:Valloric/YouCompleteMe.git
+>>>>>>> 0eae69260cb0e1d97945495fcf8e5d4d4ae9642f

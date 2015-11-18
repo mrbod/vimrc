@@ -104,6 +104,8 @@ set expandtab
 " execute local .vimrc
 set exrc
 
+autocmd CompleteDone * pclose
+
 let dircolors_is_slackware = 1
 
 function! SetCursorColour()
@@ -120,14 +122,17 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
+set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj
+
 let g:pymode = 0
 let g:pymode_folding = 0
+let g:ycm_show_diagnostics_ui = 0
 execute pathogen#infect()
 execute pathogen#helptags()
 
 if has('nvim')
     set clipboard+=unnamed
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 

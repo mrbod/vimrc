@@ -133,31 +133,22 @@ function! SetCursorColour()
 endfunction
 " call SetCursorColour()
 
-<<<<<<< HEAD
-set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj
+set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
+let g:ycm_show_diagnostics_ui = 0
 
 let g:pymode = 0
 let g:pymode_folding = 0
-let g:ycm_show_diagnostics_ui = 0
-=======
-let g:ycm_show_diagnostics_ui = 0
-
-set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 
 if has("win32") || (os == "Cygwin")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
->>>>>>> 0eae69260cb0e1d97945495fcf8e5d4d4ae9642f
+
 execute pathogen#infect()
 execute pathogen#helptags()
 
 if has('nvim')
     set clipboard+=unnamed
-<<<<<<< HEAD
-    "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-=======
     " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
->>>>>>> 0eae69260cb0e1d97945495fcf8e5d4d4ae9642f
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 

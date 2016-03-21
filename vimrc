@@ -18,7 +18,7 @@ if has('mouse')
 endif
 
 if !has('nvim')
-    set history=50          " keep 50 lines of command line history
+    set history=500          " keep X lines of command line history
     set t_Co=256
 endif
 
@@ -148,8 +148,17 @@ if has('nvim')
 endif
 
 set laststatus=2
-let g:airline_powerline_fonts = 1
 
+" TDD
+augroup tdd_style_autocmds
+    autocmd!
+    autocmd FileType python nnoremap <F12> :!nosetests<cr>
+augroup END
+
+let g:lightline = {'colorscheme': 'wombat'}
+
+" execute current buffer
+nnoremap <F5> :!%<cr>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " underline headings for example

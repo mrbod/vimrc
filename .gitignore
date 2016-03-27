@@ -3,3 +3,6 @@
 .netrwhist
 taglist.txt
 doc/tags
+shada
+.VimballRecord
+bundle/YCM-Generator

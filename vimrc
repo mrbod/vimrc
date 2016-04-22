@@ -155,7 +155,17 @@ augroup tdd_style_autocmds
     autocmd FileType python nnoremap <F12> :!nosetests<cr>
 augroup END
 
-let g:lightline = {'colorscheme': 'wombat'}
+let g:lightline = {
+            \ 'colorscheme': 'wombat',
+            \ 'active': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'fugitive', 'readonly', 'filename', 'modified' ]
+            \           ]
+            \ },
+            \ 'component': {
+            \   'fugitive': '%{exists("*fugitive#statusline")?fugitive#statusline():""}'
+            \ }
+            \ }
 
 " execute current buffer
 nnoremap <F5> :!%<cr>

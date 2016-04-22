@@ -1,22 +1,24 @@
 [submodule "vim-racket"]
     path = bundle/vim-racket
     url = https://github.com/wlangstroth/vim-racket
-
 [submodule "bundle/vim-colorschemes"]
-	path = bundle/vim-colorschemes
-	url = https://github.com/flazz/vim-colorschemes.git
+    path = bundle/vim-colorschemes
+    url = https://github.com/flazz/vim-colorschemes.git
 [submodule "bundle/vim-vinegar"]
-	path = bundle/vim-vinegar
-	url = git://github.com/tpope/vim-vinegar.git
+    path = bundle/vim-vinegar
+    url = git://github.com/tpope/vim-vinegar.git
 [submodule "bundle/YouCompleteMe"]
-	path = bundle/YouCompleteMe
-	url = git@github.com:Valloric/YouCompleteMe.git
+    path = bundle/YouCompleteMe
+    url = git@github.com:Valloric/YouCompleteMe.git
 [submodule "bundle/lightline.vim"]
-	path = bundle/lightline.vim
-	url = https://github.com/itchyny/lightline.vim
+    path = bundle/lightline.vim
+    url = https://github.com/itchyny/lightline.vim
+[submodule "bundle/vim-fugitive"]
+    path = bundle/vim-fugitive
+    url = git://github.com/tpope/vim-fugitive.git
 [submodule "bundle/ctrlp.vim"]
-	path = bundle/ctrlp.vim
-	url = git@github.com:kien/ctrlp.vim.git
+    path = bundle/ctrlp.vim
+    url = git@github.com:kien/ctrlp.vim.git
 [submodule "bundle/vim-python-pep8-indent"]
-	path = bundle/vim-python-pep8-indent
-	url = git@github.com:hynek/vim-python-pep8-indent.git
+    path = bundle/vim-python-pep8-indent
+    url = git@github.com:hynek/vim-python-pep8-indent.git

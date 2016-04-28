@@ -138,6 +138,7 @@ set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 if has("win32") || (os == "Cygwin")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
+let g:pathogen_disabled=["lightline.vim"]
 execute pathogen#infect()
 execute pathogen#helptags()
 
@@ -147,7 +148,12 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
+function MyStatusLine()
+    return '%f here%= there %P'
+endfunction
+
 set laststatus=2
+" set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds

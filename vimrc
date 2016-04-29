@@ -129,7 +129,7 @@ function! SetCursorColour()
         " use \003]12;gray\007 for gnome-terminal
     endif
 endfunction
-" call SetCursorColour()
+call SetCursorColour()
 
 let g:ycm_show_diagnostics_ui = 0
 
@@ -147,9 +147,31 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
+python << EOF
+import vim
+import sys
+import subprocess
+def git_status():
+    s = subprocess.check_output(['git', 'status', '-s'])
+    r = set()
+    for l in s.split('\n'):
+        x = l[:2]
+        for c in x:
+            r.add(c)
+    return ''.join(r)
+EOF
+
+function! GitStatus()
+python << EOF
+vim.command('let res = \'{}\''.format(git_status()))
+EOF
+    return res
+endfunction
+
 function! MyStatusLine()
     let s = '%.30F%m%r %y'
-    let s .= '%{exists("*fugitive#statusline")?" ".fugitive#statusline():""}'
+    let s .= '%{" ".GitStatus()}'
+    "let s .= '%{exists("*fugitive#statusline")?" ".fugitive#statusline():""}'
     let s .= '%=%l/%L'
     return s
 endfunction

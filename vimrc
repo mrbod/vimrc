@@ -138,7 +138,6 @@ set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 if has("win32") || (os == "Cygwin")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
-let g:pathogen_disabled=["lightline.vim"]
 execute pathogen#infect()
 execute pathogen#helptags()
 
@@ -148,30 +147,21 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
-function MyStatusLine()
-    return '%f here%= there %P'
+function! MyStatusLine()
+    let s = '%.30F%m%r %y'
+    let s .= '%{exists("*fugitive#statusline")?" ".fugitive#statusline():""}'
+    let s .= '%=%l/%L'
+    return s
 endfunction
 
 set laststatus=2
-" set statusline=%!MyStatusLine()
+set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds
     autocmd!
     autocmd FileType python nnoremap <F12> :!nosetests<cr>
 augroup END
-
-let g:lightline = {
-            \ 'colorscheme': 'wombat',
-            \ 'active': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'fugitive', 'readonly', 'filename', 'modified' ]
-            \           ]
-            \ },
-            \ 'component': {
-            \   'fugitive': '%{exists("*fugitive#statusline")?fugitive#statusline():""}'
-            \ }
-            \ }
 
 " execute current buffer
 nnoremap <F5> :!%<cr>

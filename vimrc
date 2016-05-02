@@ -150,15 +150,21 @@ endif
 python << EOF
 import vim
 import sys
+import os
 import subprocess
 def git_status():
-    s = subprocess.check_output(['git', 'status', '-s'])
+    try:
+        s = subprocess.check_output(['git', 'status', '--porcelain'],
+                                    stderr=open(os.devnull, 'w'))
+    except subprocess.CalledProcessError as e:
+        return ''
     r = set()
     for l in s.split('\n'):
         x = l[:2]
         for c in x:
-            r.add(c)
-    return ''.join(r)
+            if not c.isspace():
+                r.add(c)
+    return '[' + ''.join(r) + ']'
 EOF
 
 function! GitStatus()
@@ -170,8 +176,7 @@ endfunction
 
 function! MyStatusLine()
     let s = '%.30F%m%r %y'
-    let s .= '%{" ".GitStatus()}'
-    "let s .= '%{exists("*fugitive#statusline")?" ".fugitive#statusline():""}'
+    " let s .= '%{GitStatus()}'
     let s .= '%=%l/%L'
     return s
 endfunction

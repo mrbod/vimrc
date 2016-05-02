@@ -131,7 +131,7 @@ function! SetCursorColour()
         " use \003]12;gray\007 for gnome-terminal
     endif
 endfunction
-" call SetCursorColour()
+call SetCursorColour()
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 let g:ycm_show_diagnostics_ui = 0
@@ -152,15 +152,48 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
+python << EOF
+import vim
+import sys
+import os
+import subprocess
+def git_status():
+    try:
+        s = subprocess.check_output(['git', 'status', '--porcelain'],
+                                    stderr=open(os.devnull, 'w'))
+    except subprocess.CalledProcessError as e:
+        return ''
+    r = set()
+    for l in s.split('\n'):
+        x = l[:2]
+        for c in x:
+            if not c.isspace():
+                r.add(c)
+    return '[' + ''.join(r) + ']'
+EOF
+
+function! GitStatus()
+python << EOF
+vim.command('let res = \'{}\''.format(git_status()))
+EOF
+    return res
+endfunction
+
+function! MyStatusLine()
+    let s = '%.30F%m%r %y'
+    " let s .= '%{GitStatus()}'
+    let s .= '%=%l/%L'
+    return s
+endfunction
+
 set laststatus=2
+set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds
     autocmd!
     autocmd FileType python nnoremap <F12> :!nosetests<cr>
 augroup END
-
-let g:lightline = {'colorscheme': 'wombat'}
 
 " execute current buffer
 nnoremap <F5> :!%<cr>

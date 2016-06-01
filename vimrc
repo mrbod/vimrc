@@ -115,6 +115,8 @@ set expandtab
 " execute local .vimrc
 set exrc
 
+autocmd CompleteDone * pclose
+
 let dircolors_is_slackware = 1
 
 function! SetCursorColour()
@@ -131,13 +133,16 @@ function! SetCursorColour()
 endfunction
 call SetCursorColour()
 
+set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 let g:ycm_show_diagnostics_ui = 0
 
-set suffixes=.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
+let g:pymode = 0
+let g:pymode_folding = 0
 
 if has("win32") || (os == "Cygwin")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
+
 execute pathogen#infect()
 execute pathogen#helptags()
 

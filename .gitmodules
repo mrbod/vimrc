@@ -19,3 +19,4 @@
 [submodule "bundle/pfvim"]
 	path = bundle/pfvim
 	url = git@github.com:mrbod/pfvim.git
+

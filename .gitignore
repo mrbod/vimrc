@@ -6,3 +6,5 @@ doc/tags
 shada
 .VimballRecord
 bundle/YCM-Generator
+plugin/newbb.vim
+

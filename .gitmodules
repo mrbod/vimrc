@@ -16,7 +16,7 @@
 [submodule "bundle/vim-python-pep8-indent"]
     path = bundle/vim-python-pep8-indent
     url = git@github.com:hynek/vim-python-pep8-indent.git
-[submodule "bundle/pfvim"]
-	path = bundle/pfvim
-	url = git@github.com:mrbod/pfvim.git
 
+[submodule "bundle/stvim"]
+	path = bundle/stvim
+	url = git@github.com:mrbod/stvim.git

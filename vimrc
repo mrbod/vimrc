@@ -79,6 +79,12 @@ function! CSUP()
     execute ':cscope reset'
 endfunction
 
+augroup iec1131_stuff
+    autocmd!
+    autocmd BufRead,BufNewFile *.iec set filetype=structuredtext
+    autocmd BufRead,BufNewFile *.st set filetype=structuredtext
+augroup END
+
 augroup arduino_stuff
     autocmd!
     autocmd BufRead,BufNewFile *.pde set filetype=cpp

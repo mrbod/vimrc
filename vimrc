@@ -147,43 +147,8 @@ if has('nvim')
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 endif
 
-python << EOF
-import vim
-import sys
-import os
-import subprocess
-def git_status():
-    try:
-        s = subprocess.check_output(['git', 'status', '--porcelain'],
-                                    stderr=open(os.devnull, 'w'))
-        return s
-    except subprocess.CalledProcessError as e:
-        return ''
-
-def git_root():
-    try:
-        s = subprocess.check_output(['git', 'root'],
-                                    stderr=open(os.devnull, 'w'))
-        return s.strip()
-    except subprocess.CalledProcessError as e:
-        return ''
-
-def git_status_line():
-    s = git_status()
-    W, I = zip(*((l[0], l[1]) for l in s.split('\n') if l))
-    W = list(set(W))
-    I = list(set(I))
-    W.sort()
-    I.sort()
-    return 'git:{}|{}'.format(''.join(W), ''.join(I))
-EOF
-
 function! MyStatusLine()
-python << EOF
-#s = '%.30F%m%r %y{}%=%l/%L'.format(git_status_line())
-s = '%.30F%m%r %y%=%l/%L'
-vim.command('return \'{}\''.format(s))
-EOF
+    return '%.30F%m%r %y%=%l/%L'
 endfunction
 
 set laststatus=2

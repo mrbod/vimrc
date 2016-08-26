@@ -13,8 +13,16 @@ set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
 
+" indentation
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+
+" execute local .vimrc
+set exrc
+
 if has('mouse')
-  set mouse=a
+    set mouse=a
 endif
 
 if !has('nvim')
@@ -50,9 +58,6 @@ elseif &t_Co > 2
 endif
 
 " Enable file type detection.
-" Use the default filetype settings, so that mail gets 'tw' set to 72,
-" 'cindent' is on in C files, etc.
-" Also load indent files, to automatically do language-dependent indenting.
 filetype plugin indent on
 
 " Put these in an autocmd group, so that we can delete them easily.
@@ -67,9 +72,25 @@ augroup vimrcEx
     " Also don't do it when the mark is in the first line, that is the default
     " position when opening a file.
     autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
+                \ if line("'\"") > 1 && line("'\"") <= line("$") |
+                \   exe "normal! g`\"" |
+                \ endif
+augroup END
+
+augroup bulgroup
+    autocmd!
+
+    autocmd BufNewFile *.bul set syntax=structuredtext
+
+    autocmd BufReadPre,FileReadPre   *.bul set bin
+    autocmd BufReadPost,FileReadPost *.bul silent %!bsc
+    autocmd BufReadPost,FileReadPost *.bul set nobin
+    autocmd BufReadPost,FileReadPost *.bul set syntax=structuredtext
+
+    autocmd BufWritePre,FileWritePre *.bul set bin
+    autocmd BufWritePre,FileWritePre *.bul silent %!bsc
+    autocmd BufWritePost,FileWritePost *.bul silent %!bsc
+    autocmd BufWritePost,FileWritePost *.bul set nobin
 augroup END
 
 let g:CSextra=''
@@ -109,17 +130,9 @@ set backupskip+=/var/spool/cron/*
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
 if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-                  \ | wincmd p | diffthis
+    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+                \ | wincmd p | diffthis
 endif
-
-" indentation
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-
-" execute local .vimrc
-set exrc
 
 autocmd CompleteDone * pclose
 
@@ -137,7 +150,7 @@ function! SetCursorColour()
         " use \003]12;gray\007 for gnome-terminal
     endif
 endfunction
-call SetCursorColour()
+" call SetCursorColour()
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
 let g:ycm_show_diagnostics_ui = 0
@@ -171,13 +184,18 @@ augroup tdd_style_autocmds
     autocmd FileType python nnoremap <F12> :!nosetests<cr>
 augroup END
 
+" stop using arrow keys
+" noremap <Up> <Nop>
+" noremap <Down> <Nop>
+" noremap <Left> <Nop>
+" noremap <Right> <Nop>
 " execute current buffer
 nnoremap <F5> :!%<cr>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " underline headings for example
-nnoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
-nnoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
+nnoremap <leader><leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
+nnoremap <leader><leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
 inoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>o
 inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 " soft wrapped line movement

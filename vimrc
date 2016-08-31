@@ -77,34 +77,12 @@ augroup vimrcEx
                 \ endif
 augroup END
 
-augroup bulgroup
-    autocmd!
-
-    autocmd BufNewFile *.bul set syntax=structuredtext
-
-    autocmd BufReadPre,FileReadPre   *.bul set bin
-    autocmd BufReadPost,FileReadPost *.bul silent %!bsc
-    autocmd BufReadPost,FileReadPost *.bul set nobin
-    autocmd BufReadPost,FileReadPost *.bul set syntax=structuredtext
-
-    autocmd BufWritePre,FileWritePre *.bul set bin
-    autocmd BufWritePre,FileWritePre *.bul silent %!bsc
-    autocmd BufWritePost,FileWritePost *.bul silent %!bsc
-    autocmd BufWritePost,FileWritePost *.bul set nobin
-augroup END
-
 let g:CSextra=''
 function! CSUP()
     echo "Updating cscope database"
     execute ':!cscope -b ' . g:CSextra
     execute ':cscope reset'
 endfunction
-
-augroup iec1131_stuff
-    autocmd!
-    autocmd BufRead,BufNewFile *.iec set filetype=structuredtext
-    autocmd BufRead,BufNewFile *.st set filetype=structuredtext
-augroup END
 
 augroup arduino_stuff
     autocmd!

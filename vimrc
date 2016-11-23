@@ -2,11 +2,11 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
 let mapleader = ","
 let maplocalleader = ","
+
+set path+=**
+set wildmenu
 
 set backup              " keep a backup file
 set ruler               " show the cursor position all the time
@@ -21,13 +21,11 @@ set expandtab
 " execute local .vimrc
 set exrc
 
+set spelllang=en_gb
+set spell
+
 if has('mouse')
     set mouse=a
-endif
-
-if !has('nvim')
-    set history=500          " keep X lines of command line history
-    set t_Co=256
 endif
 
 if has("win32")
@@ -104,33 +102,11 @@ augroup END
 " Make vim work with the 'crontab -e' command
 set backupskip+=/var/spool/cron/*
 
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-                \ | wincmd p | diffthis
-endif
-
 autocmd CompleteDone * pclose
 
 let dircolors_is_slackware = 1
 
-function! SetCursorColour()
-    if &term =~ "xterm\\|rxvt"
-        " use an orange cursor in insert mode
-        let &t_SI = "\<Esc>]12;orange\x7"
-        " use a red cursor otherwise
-        let &t_EI = "\<Esc>]12;red\x7"
-        silent !echo -ne "\033]12;red\007"
-        " reset cursor when vim exits
-        autocmd VimLeave * silent !echo -ne "\033]112\007"
-        " use \003]12;gray\007 for gnome-terminal
-    endif
-endfunction
-" call SetCursorColour()
-
-set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,~,.zip,.hex,.o,.elf
+set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf
 let g:ycm_show_diagnostics_ui = 0
 
 let g:pymode = 0
@@ -143,18 +119,12 @@ endif
 execute pathogen#infect()
 execute pathogen#helptags()
 
-if has('nvim')
-    set clipboard+=unnamed
-    " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-endif
-
 function! MyStatusLine()
     return '%.30F%m%r %y%=%l/%L'
 endfunction
 
 set laststatus=2
-set statusline=%!MyStatusLine()
+"set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds

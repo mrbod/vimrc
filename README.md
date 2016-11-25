@@ -1,1 +1,1 @@
-VIM editor settings I want to spread troughout my systems.
+VIM editor settings I want to spread throughout my systems.

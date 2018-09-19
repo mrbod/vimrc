@@ -22,7 +22,7 @@ set expandtab
 set exrc
 
 set spelllang=en_gb
-set spell
+"set spell
 
 if has('mouse')
     set mouse=a
@@ -82,6 +82,12 @@ function! CSUP()
     execute ':cscope reset'
 endfunction
 
+augroup scons_stuff
+    autocmd!
+    autocmd BufRead,BufNewFile SConstruct set filetype=python
+    autocmd BufRead,BufNewFile SConscript set filetype=python
+augroup END
+
 augroup arduino_stuff
     autocmd!
     autocmd BufRead,BufNewFile *.pde set filetype=cpp
@@ -103,6 +109,8 @@ augroup END
 set backupskip+=/var/spool/cron/*
 
 autocmd CompleteDone * pclose
+
+set scrolloff=0
 
 let dircolors_is_slackware = 1
 

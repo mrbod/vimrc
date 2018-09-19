@@ -96,10 +96,12 @@ augroup END
 
 autocmd CompleteDone * pclose
 
+autocmd BufRead,BufNewFile *.cpy set filetype=asm
+
 augroup c_style_autocmds
     autocmd!
-    autocmd FileType c setlocal cinoptions=:0t0g0l1
-    autocmd FileType cpp setlocal cinoptions=:0t0g0l1
+    autocmd FileType c setlocal cinoptions=:0t0g0l1N-s
+    autocmd FileType cpp setlocal cinoptions=:0t0g0l1N-s
     " cscope stuff
     autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
     autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
@@ -149,6 +151,8 @@ augroup END
 nnoremap <F5> :!%<cr>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
+" create c/cpp header cruft
+"nnoremap <leader>H GO#ifndef
 " underline headings for example
 nnoremap <leader><leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader><leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
@@ -198,7 +202,6 @@ nnoremap <leader>rcl :split .vimrc<CR>
 nnoremap <leader>rcls :source .vimrc<CR>
 " source current buffer
 nnoremap <leader>bs :source %<CR>
-nnoremap <leader><leader>g yiw:grep <c-r>" *<cr>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
@@ -209,8 +212,23 @@ inoremap <M-Space> <esc>
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
-nnoremap <leader>q :execute "silent grep! -R " . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
+let g:CGrepFiles=" --include='*.h' --include='*.c' --include='*.cpp' "
+function! GitGrep(word)
+	let m = &grepprg
+	let &grepprg = 'git grep -P $*'
+	execute "grep " . a:word
+	copen
+	let &grepprg = m
+endfunction
+command! -nargs=1 GG :call GitGrep(<q-args>)
+nnoremap <leader><leader>g :execute "GG " . shellescape(expand("<cword>"))<cr><cr>
+nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
+"nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
 nnoremap <leader>= gg=G''zz
+" move selection
+" vnoremap J :m '>+1<CR>gv
+" vnoremap K :m '<-2<CR>gv
+nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 
 runtime colorscheme

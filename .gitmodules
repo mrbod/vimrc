@@ -8,7 +8,7 @@
     path = bundle/vim-vinegar
     url = git://github.com/tpope/vim-vinegar.git
 [submodule "bundle/YouCompleteMe"]
-    path = bundle/YouCompleteMe
+	path = pack/plugins/start/YouCompleteMe
     url = git@github.com:Valloric/YouCompleteMe.git
 [submodule "bundle/ctrlp.vim"]
     path = bundle/ctrlp.vim

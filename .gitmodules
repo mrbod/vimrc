@@ -5,7 +5,7 @@
     path = bundle/vim-colorschemes
     url = git@github.com:mrbod/vim-colorschemes.git
 [submodule "bundle/vim-vinegar"]
-    path = bundle/vim-vinegar
+	path = pack/plugins/start/vim-vinegar
     url = git://github.com/tpope/vim-vinegar.git
 [submodule "bundle/YouCompleteMe"]
 	path = pack/plugins/start/YouCompleteMe

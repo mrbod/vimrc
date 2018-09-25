@@ -109,7 +109,7 @@ autocmd CompleteDone * pclose
 let dircolors_is_slackware = 1
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf
-let g:ycm_show_diagnostics_ui = 1
+let g:ycm_show_diagnostics_ui = 0
 
 let g:pymode = 0
 let g:pymode_folding = 0

@@ -215,7 +215,7 @@ nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 let g:CGrepFiles=" --include='*.h' --include='*.c' --include='*.cpp' "
 function! GitGrep(word)
 	let m = &grepprg
-	let &grepprg = 'git grep -P $*'
+	let &grepprg = 'git grep -E $*'
 	execute "grep " . a:word
 	copen
 	let &grepprg = m

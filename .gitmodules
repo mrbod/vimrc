@@ -5,10 +5,10 @@
     path = bundle/vim-colorschemes
     url = git@github.com:mrbod/vim-colorschemes.git
 [submodule "bundle/vim-vinegar"]
-    path = bundle/vim-vinegar
+	path = pack/plugins/start/vim-vinegar
     url = git://github.com/tpope/vim-vinegar.git
 [submodule "bundle/YouCompleteMe"]
-    path = bundle/YouCompleteMe
+	path = pack/plugins/start/YouCompleteMe
     url = git@github.com:Valloric/YouCompleteMe.git
 [submodule "bundle/ctrlp.vim"]
     path = bundle/ctrlp.vim
@@ -32,9 +32,6 @@
 [submodule "bundle/vim-snippets"]
 	path = bundle/vim-snippets
 	url = https://github.com/honza/vim-snippets.git
-[submodule "bundle/vim-latex-live-preview"]
-	path = bundle/vim-latex-live-preview
-	url = git@github.com:xuhdev/vim-latex-live-preview.git
-[submodule "bundle/gruvbox"]
-	path = bundle/gruvbox
-	url = https://github.com/morhetz/gruvbox
+[submodule "pack/plugins/start/editorconfig-vim"]
+	path = pack/plugins/start/editorconfig-vim
+	url = https://github.com/editorconfig/editorconfig-vim.git

@@ -94,7 +94,7 @@ augroup arduino_stuff
     autocmd BufRead,BufNewFile *.ino set filetype=cpp
 augroup END
 
-autocmd CompleteDone * pclose
+autocmd BufRead,BufNewFile *.mnu set filetype=
 
 autocmd BufRead,BufNewFile *.cpy set filetype=asm
 
@@ -110,19 +110,22 @@ augroup END
 " Make vim work with the 'crontab -e' command
 set backupskip+=/var/spool/cron/*
 
-autocmd CompleteDone * pclose
-
 set scrolloff=0
-
 let dircolors_is_slackware = 1
+"autocmd CompleteDone * pclose
 
-set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf
+set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
 
 let g:pymode = 0
 let g:pymode_folding = 0
 
-if has("win32") || (os == "Cygwin")
+let g:ctrlp_custom_ignore = {'dir': '\v[\/]\.(git|hg|svn)$', 'file': '\v\.(exe|dll|obj|sbr)$'}
+let g:ctrlp_mruf_case_sensitive = 0
+
+if has("win32")
     let g:pathogen_disabled=["YouCompleteMe"]
 endif
 
@@ -162,7 +165,8 @@ inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 "nnoremap j gj
 "nnoremap k gk
 " previous buffer
-nnoremap <C-e> :e#<CR>
+"nnoremap <C-e> :e#<CR>
+nnoremap <C-e> <c-^>
 " buffer movement
 nnoremap <C-S-n> :bprev<cr>
 nnoremap <C-n> :bnext<cr>
@@ -221,7 +225,7 @@ function! GitGrep(word)
 	let &grepprg = m
 endfunction
 command! -nargs=1 GG :call GitGrep(<q-args>)
-nnoremap <leader><leader>g :execute "GG " . shellescape(expand("<cword>"))<cr><cr>
+nnoremap <leader><leader>g :execute "GG " . shellescape(expand("<cword>"))<cr><cr><cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
@@ -232,3 +236,4 @@ nnoremap <leader>= gg=G''zz
 nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 
 runtime colorscheme
+

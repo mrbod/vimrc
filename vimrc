@@ -150,8 +150,6 @@ augroup END
 " noremap <Down> <Nop>
 " noremap <Left> <Nop>
 " noremap <Right> <Nop>
-" execute current buffer
-nnoremap <F5> :!%<cr>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " create c/cpp header cruft
@@ -184,6 +182,10 @@ nnoremap [1;5S :clast<CR>
 nnoremap [1;2S :cprev<CR>
 nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
+" execute current buffer
+nnoremap <F5> :!%<cr>
+autocmd FileType c nnoremap <F5> :make test<CR>
+autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
 nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev

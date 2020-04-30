@@ -125,8 +125,8 @@ augroup END
 " Make vim work with the 'crontab -e' command
 set backupskip+=/var/spool/cron/*
 
+set scrolloff=0
 let dircolors_is_slackware = 1
-
 "autocmd CompleteDone * pclose
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
@@ -158,8 +158,6 @@ augroup END
 " noremap <Down> <Nop>
 " noremap <Left> <Nop>
 " noremap <Right> <Nop>
-" execute current buffer
-nnoremap <F5> :!%<cr>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
 " create c/cpp header cruft
@@ -192,6 +190,10 @@ nnoremap [1;5S :clast<CR>
 nnoremap [1;2S :cprev<CR>
 nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
+" execute current buffer
+nnoremap <F5> :!%<cr>
+autocmd FileType c nnoremap <F5> :make test<CR>
+autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
 nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev
@@ -227,7 +229,7 @@ nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 let g:CGrepFiles=" --include='*.h' --include='*.c' --include='*.cpp' "
 function! GitGrep(word)
     let tmpf = tempname()
-    let cmd = '!git grep ' . a:word . ' 2>/dev/null | tr -d "\r" | tee ' . tmpf
+    let cmd = '!git grep -E ' . a:word . ' 2>/dev/null | tr -d "\r" | tee ' . tmpf
     execute cmd
     let ef = &errorformat
     let &errorformat = &grepformat
@@ -239,7 +241,7 @@ function! GitGrep(word)
 endfunction
 function! OldGitGrep(word)
     let m = &grepprg
-    let &grepprg = 'git grep $* | tr -d "\r"'
+    let &grepprg = 'git grep -E $* | tr -d "\r"'
     execute "grep " . a:word
     copen
     let &grepprg = m

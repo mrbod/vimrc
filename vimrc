@@ -40,9 +40,11 @@ else
     endif
 endif
 
-set notermguicolors
-"let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
-"let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+if os == "Cygwin"
+    set notermguicolors
+else
+    set termguicolors
+endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -132,7 +134,8 @@ augroup END
 set backupskip+=/var/spool/cron/*
 
 set scrolloff=0
-"autocmd CompleteDone * pclose
+let dircolors_is_slackware = 1
+autocmd CompleteDone * pclose
 
 " for clang_complete
 "let g:clang_library_path='/usr/bin/cygclang-8.dll'
@@ -146,15 +149,18 @@ let g:ycm_server_log_level = 'debug'
 let g:pymode = 0
 let g:pymode_folding = 0
 
+let g:ctrlp_custom_ignore = {'dir': '\v[\/]\.(git|hg|svn)$', 'file': '\v\.(exe|dll|obj|sbr)$'}
+let g:ctrlp_mruf_case_sensitive = 0
+
 execute pathogen#infect()
 execute pathogen#helptags()
 
 function! MyStatusLine()
-    return '%.30F%m%r %y%=%l/%L'
+    return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
 endfunction
 
 set laststatus=2
-"set statusline=%!MyStatusLine()
+set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds

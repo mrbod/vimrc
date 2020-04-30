@@ -37,6 +37,11 @@ else
     endif
 endif
 
+set termguicolors
+"let g:solarized_use16 = 0
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")
@@ -112,12 +117,12 @@ set backupskip+=/var/spool/cron/*
 
 set scrolloff=0
 let dircolors_is_slackware = 1
-"autocmd CompleteDone * pclose
+autocmd CompleteDone * pclose
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 let g:ycm_show_diagnostics_ui = 0
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
+"let g:ycm_server_keep_logfiles = 1
+"let g:ycm_server_log_level = 'debug'
 
 let g:pymode = 0
 let g:pymode_folding = 0
@@ -125,19 +130,15 @@ let g:pymode_folding = 0
 let g:ctrlp_custom_ignore = {'dir': '\v[\/]\.(git|hg|svn)$', 'file': '\v\.(exe|dll|obj|sbr)$'}
 let g:ctrlp_mruf_case_sensitive = 0
 
-if has("win32")
-    let g:pathogen_disabled=["YouCompleteMe"]
-endif
-
 execute pathogen#infect()
 execute pathogen#helptags()
 
 function! MyStatusLine()
-    return '%.30F%m%r %y%=%l/%L'
+    return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
 endfunction
 
 set laststatus=2
-"set statusline=%!MyStatusLine()
+set statusline=%!MyStatusLine()
 
 " TDD
 augroup tdd_style_autocmds

@@ -40,6 +40,10 @@ else
     endif
 endif
 
+set notermguicolors
+"let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+"let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")
@@ -103,8 +107,10 @@ autocmd BufRead,BufNewFile *.cpy set filetype=asm
 
 augroup c_style_autocmds
     autocmd!
-    autocmd FileType c setlocal cinoptions=:0t0g0l1N-s
-    autocmd FileType cpp setlocal cinoptions=:0t0g0l1N-s
+    autocmd FileType c setlocal cinoptions=t0,g0,l1,N-s
+    autocmd FileType cpp setlocal cinoptions=t0,g0,l1,N-s,j1
+    " handle lambda correctly
+    " setlocal cino=j1,(0,ws,Ws
     " cscope stuff
     autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
     autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
@@ -126,12 +132,15 @@ augroup END
 set backupskip+=/var/spool/cron/*
 
 set scrolloff=0
-let dircolors_is_slackware = 1
 "autocmd CompleteDone * pclose
 
+" for clang_complete
+"let g:clang_library_path='/usr/bin/cygclang-8.dll'
+
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
+let g:ycm_use_clangd = 0
 let g:ycm_show_diagnostics_ui = 0
-let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_keep_logfiles = 0
 let g:ycm_server_log_level = 'debug'
 
 let g:pymode = 0
@@ -195,6 +204,7 @@ nnoremap <F5> :!%<cr>
 autocmd FileType c nnoremap <F5> :make test<CR>
 autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
+nnoremap <F5> :make test<CR>
 nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev
 nnoremap <Leader>n :tnext<CR>
@@ -250,12 +260,13 @@ command! -nargs=1 GG :call GitGrep(<q-args>)
 nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
 nnoremap <leader><leader>y :execute "YcmCompleter GoToDefinition"<cr><cr><cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
+nnoremap <leader><leader>p :execute "GG -i '^[[:space:]]*" . shellescape(expand("<cword>")) . "[[:space:]]\\+proc\\>'"<cr><cr><cr>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
 nnoremap <leader>= gg=G''zz
 " move selection
-" vnoremap J :m '>+1<CR>gv
-" vnoremap K :m '<-2<CR>gv
+vnoremap J :m '>+1<CR>gv
+vnoremap K :m '<-2<CR>gv
 nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 
 map <leader><leader>d :set background=dark<cr>

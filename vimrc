@@ -5,6 +5,9 @@ set nocompatible
 let mapleader = ","
 let maplocalleader = ","
 
+set undofile
+set undodir=~/.vim/undodir
+
 set path+=**
 set wildmenu
 
@@ -94,7 +97,7 @@ augroup arduino_stuff
     autocmd BufRead,BufNewFile *.ino set filetype=cpp
 augroup END
 
-autocmd BufRead,BufNewFile *.mnu set filetype=
+autocmd BufRead,BufNewFile *.mnu set filetype=mnu
 
 autocmd BufRead,BufNewFile *.cpy set filetype=asm
 
@@ -105,6 +108,18 @@ augroup c_style_autocmds
     " cscope stuff
     autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
     autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
+augroup END
+
+augroup fastcad_stuff
+    autocmd!
+    let fcw_cmd = '%!fcw_dump -T -v -v'
+    "let fcw_cmd = '%!fcw_dump -T -v'
+    autocmd BufReadPre,FileReadPre *.fcw set bin
+    autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
+    autocmd BufReadPost,FileReadPost *.fcw set readonly
+    autocmd BufReadPre,FileReadPre *.fct set bin
+    autocmd BufReadPost,FileReadPost *.fct execute fcw_cmd
+    autocmd BufReadPost,FileReadPost *.fct set readonly
 augroup END
 
 " Make vim work with the 'crontab -e' command
@@ -121,13 +136,6 @@ let g:ycm_server_log_level = 'debug'
 
 let g:pymode = 0
 let g:pymode_folding = 0
-
-let g:ctrlp_custom_ignore = {'dir': '\v[\/]\.(git|hg|svn)$', 'file': '\v\.(exe|dll|obj|sbr)$'}
-let g:ctrlp_mruf_case_sensitive = 0
-
-if has("win32")
-    let g:pathogen_disabled=["YouCompleteMe"]
-endif
 
 execute pathogen#infect()
 execute pathogen#helptags()
@@ -218,14 +226,27 @@ nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
 let g:CGrepFiles=" --include='*.h' --include='*.c' --include='*.cpp' "
 function! GitGrep(word)
-	let m = &grepprg
-	let &grepprg = 'git grep $*'
-	execute "grep " . a:word
-	copen
-	let &grepprg = m
+    let tmpf = tempname()
+    let cmd = '!git grep ' . a:word . ' 2>/dev/null | tr -d "\r" | tee ' . tmpf
+    execute cmd
+    let ef = &errorformat
+    let &errorformat = &grepformat
+    let &errorfile = tmpf
+    cfile
+    let &errorformat = ef
+    copen
+    execute '!rm -f ' . tmpf
+endfunction
+function! OldGitGrep(word)
+    let m = &grepprg
+    let &grepprg = 'git grep $* | tr -d "\r"'
+    execute "grep " . a:word
+    copen
+    let &grepprg = m
 endfunction
 command! -nargs=1 GG :call GitGrep(<q-args>)
-nnoremap <leader><leader>g :execute "GG " . shellescape(expand("<cword>"))<cr><cr><cr>
+nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
+nnoremap <leader><leader>y :execute "YcmCompleter GoToDefinition"<cr><cr><cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
@@ -234,6 +255,16 @@ nnoremap <leader>= gg=G''zz
 " vnoremap J :m '>+1<CR>gv
 " vnoremap K :m '<-2<CR>gv
 nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
+
+map <leader><leader>d :set background=dark<cr>
+map <leader><leader>l :set background=light<cr>
+
+map <leader><leader>f :pyf /home/per/bin/clang-format.py<cr>
+imap <leader><leader>f <c-o>:pyf /home/per/bin/clang-format.py<cr>
+
+function! Pandoc()
+    execute "!pandoc -f markdown -t html % | xsel"
+endfunction
 
 runtime colorscheme
 

@@ -84,6 +84,16 @@ augroup vimrcEx
                 \ endif
 augroup END
 
+let mapleader=','
+if exists(":Tabularize")
+    nmap <Leader>Tt :Tabularize /<Tab><CR>
+    vmap <Leader>Tt :Tabularize /<Tab><CR>
+    nmap <Leader>T= :Tabularize /=<CR>
+    vmap <Leader>T= :Tabularize /=<CR>
+    nmap <Leader>T: :Tabularize /:\zs<CR>
+    vmap <Leader>T: :Tabularize /:\zs<CR>
+endif
+
 let g:CSextra=''
 function! CSUP()
     echo "Updating cscope database"
@@ -118,10 +128,19 @@ augroup c_style_autocmds
     autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
 augroup END
 
+augroup asm_stuff
+    autocmd FileType asm setlocal shiftwidth=8
+    autocmd FileType asm setlocal softtabstop=8
+    autocmd FileType asm setlocal noexpandtab
+augroup END
+
 augroup fastcad_stuff
     autocmd!
-    let fcw_cmd = '%!fcw_dump -T -v -v'
-    "let fcw_cmd = '%!fcw_dump -T -v'
+    "let fcw_cmd = '%!fcw_dump -T -x -v -v'
+    "let fcw_cmd = '%!fcw_dump -v -v | sed "s/\s*\(.*ERLen [0-9]*\).*/\1/"'
+    let fcw_cmd = '%!fcw_dump -v -v'
+    "let fcw_cmd = '%!fcw_dump -v | sed "s/, Tag [0-9]\+//"'
+    "let fcw_cmd = '%!fcw_dump'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
@@ -143,7 +162,7 @@ autocmd CompleteDone * pclose
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 let g:ycm_use_clangd = 0
 let g:ycm_show_diagnostics_ui = 0
-let g:ycm_server_keep_logfiles = 0
+let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
 let g:pymode = 0
@@ -156,7 +175,7 @@ execute pathogen#infect()
 execute pathogen#helptags()
 
 function! MyStatusLine()
-    return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
+    return '%.30f%m%r %y%=%B %3c-%-3v %l/%L'
 endfunction
 
 set laststatus=2
@@ -199,12 +218,17 @@ nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " quickfix shortcuts
-nnoremap <F4> :cnext<CR>
-nnoremap <c-F4> :clast<CR>
-nnoremap [1;5S :clast<CR>
-nnoremap [1;2S :cprev<CR>
-nnoremap <F16> :cprev<CR>
-nnoremap [1;6S :cfirst<CR>
+if &diff
+	nnoremap <F4> :norm ]c<CR>
+	nnoremap [1;2S :norm [c<CR>
+else
+	nnoremap <F4> :cnext<CR>
+	nnoremap <c-F4> :clast<CR>
+	nnoremap [1;5S :clast<CR>
+	nnoremap [1;2S :cprev<CR>
+	nnoremap <F16> :cprev<CR>
+	nnoremap [1;6S :cfirst<CR>
+endif
 " execute current buffer
 nnoremap <F5> :!%<cr>
 autocmd FileType c nnoremap <F5> :make test<CR>
@@ -213,8 +237,9 @@ nnoremap <F7> :make<CR>
 nnoremap <F5> :make test<CR>
 nnoremap <F9> :YcmCompleter FixIt
 " tag next/prev
-nnoremap <Leader>n :tnext<CR>
-nnoremap <Leader>p :tprev<CR>
+nnoremap <leader>t :tag <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>n :tnext<CR>
+nnoremap <leader>p :tprev<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
 " set executable bit
@@ -254,6 +279,7 @@ function! GitGrep(word)
     let &errorformat = ef
     copen
     execute '!rm -f ' . tmpf
+    echo cmd
 endfunction
 function! OldGitGrep(word)
     let m = &grepprg
@@ -270,6 +296,8 @@ nnoremap <leader><leader>p :execute "GG -i '^[[:space:]]*" . shellescape(expand(
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
 nnoremap <leader>= gg=G''zz
+" search for full line
+nnoremap <leader>* 0wy$/\V<c-r>=escape(@", '/\')<cr><cr><cr>
 " move selection
 vnoremap J :m '>+1<CR>gv
 vnoremap K :m '<-2<CR>gv

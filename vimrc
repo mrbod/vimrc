@@ -11,7 +11,7 @@ set undodir=~/.vim/undodir
 set path+=**
 set wildmenu
 
-set backup              " keep a backup file
+set nobackup              " keep no backup file
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
@@ -71,7 +71,7 @@ filetype plugin indent on
 augroup vimrcEx
     autocmd!
     " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
+    "autocmd FileType text setlocal textwidth=78
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
@@ -100,6 +100,33 @@ function! CSUP()
     execute ':!cscope -b ' . g:CSextra
     execute ':cscope reset'
 endfunction
+
+function! Pandoc()
+    execute "!pandoc -f markdown -t html % | xsel"
+endfunction
+
+function! MarkDown2()
+    let src = expand('%:p')
+    let dst = expand('%:p:r') . '.html'
+    let extras = '--extras=fenced-code-blocks'
+    let cmd = '!markdown2 ' . extras . '< ' . src . ' > ' . dst
+    execute cmd
+endfunction
+
+function! MD2HTML()
+    let src = expand('%:p')
+    let dst = expand('%:p:r') . '.html'
+    let extras = '--extras=fenced-code-blocks'
+    let cmd = '!markdown2 ' . extras . '< ' . src . ' > ' . dst
+    execute cmd
+endfunction
+
+augroup markdown_stuff
+    autocmd!
+    "autocmd BufWritePost *.md !markdown2 < <afile> > <afile>:r.html
+    autocmd BufWritePost *.md call MarkDown2()
+    autocmd FileType markdown nnoremap <F5> :call Pandoc()<CR><CR>
+augroup END
 
 augroup scons_stuff
     autocmd!
@@ -136,14 +163,17 @@ augroup END
 
 augroup fastcad_stuff
     autocmd!
-    "let fcw_cmd = '%!fcw_dump -T -x -v -v'
+    let fcw_cmd = '%!fcw_dump -x -v -v'
     "let fcw_cmd = '%!fcw_dump -v -v | sed "s/\s*\(.*ERLen [0-9]*\).*/\1/"'
-    let fcw_cmd = '%!fcw_dump -v -v'
-    "let fcw_cmd = '%!fcw_dump -v | sed "s/, Tag [0-9]\+//"'
+    "let fcw_cmd = '%!fcw_dump -v -v'
+    "let fcw_cmd = '%!fcw_dump -v -v | sed "s/, Tag [0-9]\+//"'
     "let fcw_cmd = '%!fcw_dump'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
+    autocmd BufReadPre,FileReadPre *.fc$ set bin
+    autocmd BufReadPost,FileReadPost *.fc$ execute fcw_cmd
+    autocmd BufReadPost,FileReadPost *.fc$ set readonly
     autocmd BufReadPre,FileReadPre *.fct set bin
     autocmd BufReadPost,FileReadPost *.fct execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fct set readonly
@@ -164,6 +194,10 @@ let g:ycm_use_clangd = 0
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_auto_hover = '' "'CursorHold'
+let g:ycm_autoclose_preview_window_after_insertion = 1
 
 let g:pymode = 0
 let g:pymode_folding = 0
@@ -217,6 +251,7 @@ nnoremap <C-k> <C-w>W
 nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
+nnoremap <F3> [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 " quickfix shortcuts
 if &diff
 	nnoremap <F4> :norm ]c<CR>
@@ -308,10 +343,6 @@ map <leader><leader>l :set background=light<cr>
 
 map <leader><leader>f :pyf /home/per/bin/clang-format.py<cr>
 imap <leader><leader>f <c-o>:pyf /home/per/bin/clang-format.py<cr>
-
-function! Pandoc()
-    execute "!pandoc -f markdown -t html % | xsel"
-endfunction
 
 runtime colorscheme
 

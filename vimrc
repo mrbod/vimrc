@@ -10,6 +10,28 @@ set undodir=~/.vim/undodir
 
 set path+=**
 set wildmenu
+set wildmode=full
+set wildignore=*~
+
+function! IsWSL()
+    let uname = substitute(system('uname'),'\n','','')
+    if uname == 'Linux'
+        let lines = readfile("/proc/version")
+        if lines[0] =~ "icrosoft"
+            return 1
+        endif
+    endif
+    return 0
+endfunction
+
+augroup wsl
+    " wsl special
+    if IsWSL()
+        set wildignorecase
+        set fileignorecase
+        set shellpipe=\ 2>&1\ \|\ tee\ %s;\ exit\ \${PIPESTATUS[0]}
+    endif
+augroup END
 
 set backup              " keep a backup file
 set ruler               " show the cursor position all the time
@@ -41,7 +63,6 @@ else
 endif
 
 set termguicolors
-"let g:solarized_use16 = 0
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
@@ -105,20 +126,43 @@ augroup END
 autocmd BufRead,BufNewFile *.mnu set filetype=mnu
 
 autocmd BufRead,BufNewFile *.cpy set filetype=asm
+autocmd BufRead,BufNewFile *.inc set filetype=asm
 
 augroup c_style_autocmds
     autocmd!
-    autocmd FileType c setlocal cinoptions=:0t0g0l1N-s
-    autocmd FileType cpp setlocal cinoptions=:0t0g0l1N-s
+    autocmd FileType c setlocal cinoptions=t0g0l1N-s
+    autocmd FileType cpp setlocal cinoptions=t0g0l1N-s
     " cscope stuff
     autocmd FileType c nnoremap <Leader>u :execute 'call CSUP()'<cr>
     autocmd FileType cpp nnoremap <Leader>u :execute 'call CSUP()'<cr>
 augroup END
 
+augroup xlsx_stuff
+    autocmd!
+    let g:zipPlugin_ext = '*.zip'
+    fun! XLSXRead(fname)
+      let temp = tempname()
+      let fn   = expand('%:p')
+      let xlsx_cmd = '/home/per/bin/xlsx2tsv'
+      let cmd = "silent !".xlsx_cmd." --delimiter='|' ".shellescape(fnameescape(a:fname),1)." > ".temp
+      exe cmd
+      sil exe 'keepalt file '.temp
+      sil keepjumps e!
+      sil exe 'keepalt file '.fnameescape(fn)
+      call delete(temp)
+      set nomod
+      set readonly
+    endfun
+    autocmd BufReadPost,FileReadPost *.xlsx call XLSXRead(expand("<amatch>"))
+augroup END
+
 augroup fastcad_stuff
     autocmd!
-    let fcw_cmd = '%!fcw_dump -T -v -v'
-    "let fcw_cmd = '%!fcw_dump -T -v'
+    "let fcw_cmd = '%!fcw_dump -x -v -v'
+    "let fcw_cmd = '%!fcw_dump -v -v'
+    "let fcw_cmd = '%!fcw_dump -x -v'
+    "let fcw_cmd = '%!fcw_dump -v'
+    let fcw_cmd = '%!fcw_dump'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
@@ -138,12 +182,10 @@ set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.e
 let g:ycm_show_diagnostics_ui = 0
 "let g:ycm_server_keep_logfiles = 1
 "let g:ycm_server_log_level = 'debug'
+"let g:ycm_auto_hover = 0
 
 let g:pymode = 0
 let g:pymode_folding = 0
-
-let g:ctrlp_custom_ignore = {'dir': '\v[\/]\.(git|hg|svn)$', 'file': '\v\.(exe|dll|obj|sbr)$'}
-let g:ctrlp_mruf_case_sensitive = 0
 
 execute pathogen#infect()
 execute pathogen#helptags()
@@ -191,6 +233,11 @@ nnoremap <C-k> <C-w>W
 nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
+" vimdiff mappings
+if &diff
+    nnoremap dj ]c
+    nnoremap dk [c
+endif
 " quickfix shortcuts
 nnoremap <F4> :cnext<CR>
 nnoremap <c-F4> :clast<CR>
@@ -203,10 +250,12 @@ nnoremap <F5> :!%<cr>
 autocmd FileType c nnoremap <F5> :make test<CR>
 autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
-nnoremap <F9> :YcmCompleter FixIt
+nnoremap <F9> :YcmCompleter FixIt<cr>
+" find tag
+nnoremap <leader>t :exec "tag " . expand("<cword>")<cr>
 " tag next/prev
-nnoremap <Leader>n :tnext<CR>
-nnoremap <Leader>p :tprev<CR>
+nnoremap <leader>n :tnext<CR>
+nnoremap <leader>p :tprev<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
 " set executable bit
@@ -269,12 +318,15 @@ nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 map <leader><leader>d :set background=dark<cr>
 map <leader><leader>l :set background=light<cr>
 
-map <leader><leader>f :pyf /home/per/bin/clang-format.py<cr>
-imap <leader><leader>f <c-o>:pyf /home/per/bin/clang-format.py<cr>
+map <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
+imap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 
 function! Pandoc()
-    execute "!pandoc -f markdown -t html % | xsel"
+    execute "w !pandoc -f commonmark -t html | xsel"
+    "execute "!pandoc -f commonmark_x -t html % | xsel"
+    "execute "!pandoc -f markdown -t html % | xsel"
 endfunction
+map <leader>pd :call Pandoc()<cr>
 
 runtime colorscheme
 

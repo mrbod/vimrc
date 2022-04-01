@@ -1,6 +1,7 @@
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
+set encoding=utf-8
 
 let mapleader = ","
 let maplocalleader = ","
@@ -88,6 +89,19 @@ function! CSUP()
     echo "Updating cscope database"
     execute ':!cscope -b ' . g:CSextra
     execute ':cscope reset'
+endfunction
+
+inoremap <silent> <Bar> <Bar><Esc>:call Per()<CR>a
+
+function! Per()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize /|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
 endfunction
 
 augroup scons_stuff

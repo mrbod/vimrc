@@ -3,7 +3,7 @@
     url = git@github.com:mrbod/vim-colorschemes.git
 [submodule "bundle/vim-vinegar"]
 	path = pack/plugins/start/vim-vinegar
-    url = git://github.com/tpope/vim-vinegar.git
+    url = https://github.com/tpope/vim-vinegar.git
 [submodule "bundle/stvim"]
 	path = bundle/stvim
 	url = git@github.com:mrbod/stvim.git

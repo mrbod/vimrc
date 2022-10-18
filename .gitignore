@@ -9,3 +9,4 @@ bundle/YCM-Generator
 bundle/vim-colors-solarized
 plugin/newbb.vim
 colorscheme
+undodir

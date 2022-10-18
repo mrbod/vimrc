@@ -62,10 +62,6 @@ else
     endif
 endif
 
-set termguicolors
-"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if has("gui_running")
@@ -143,8 +139,10 @@ augroup xlsx_stuff
     fun! XLSXRead(fname)
       let temp = tempname()
       let fn   = expand('%:p')
-      let xlsx_cmd = '/home/per/bin/xlsx2tsv'
-      let cmd = "silent !".xlsx_cmd." --delimiter='|' ".shellescape(fnameescape(a:fname),1)." > ".temp
+      let xlsx_cmd = '/home/per/bin/xlsx'
+      let cmd = "silent !" . xlsx_cmd . " " . shellescape(a:fname,1) . " > " . temp
+      "let cmd = "silent !" . xlsx_cmd . " " . shellescape(fnameescape(a:fname),1) . " > " . temp
+      echo cmd
       exe cmd
       sil exe 'keepalt file '.temp
       sil keepjumps e!
@@ -154,18 +152,23 @@ augroup xlsx_stuff
       set readonly
     endfun
     autocmd BufReadPost,FileReadPost *.xlsx call XLSXRead(expand("<amatch>"))
+    autocmd BufReadPost,FileReadPost *.xlsm call XLSXRead(expand("<amatch>"))
 augroup END
 
 augroup fastcad_stuff
     autocmd!
     "let fcw_cmd = '%!fcw_dump -x -v -v'
-    "let fcw_cmd = '%!fcw_dump -v -v'
+    "let fcw_cmd = '%!fcw_dump -T -v -v'
     "let fcw_cmd = '%!fcw_dump -x -v'
     "let fcw_cmd = '%!fcw_dump -v'
-    let fcw_cmd = '%!fcw_dump'
+    "let fcw_cmd = '%!fcw_dump'
+    let fcw_cmd = '%!fcw_dump -T'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
+    autocmd BufReadPre,FileReadPre *.fc$ set bin
+    autocmd BufReadPost,FileReadPost *.fc$ execute fcw_cmd
+    autocmd BufReadPost,FileReadPost *.fc$ set readonly
     autocmd BufReadPre,FileReadPre *.fct set bin
     autocmd BufReadPost,FileReadPost *.fct execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fct set readonly
@@ -176,19 +179,21 @@ set backupskip+=/var/spool/cron/*
 
 set scrolloff=0
 let dircolors_is_slackware = 1
-autocmd CompleteDone * pclose
+"autocmd CompleteDone * pclose
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
+
 let g:ycm_show_diagnostics_ui = 0
-"let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_keep_logfiles = 0
 "let g:ycm_server_log_level = 'debug'
-"let g:ycm_auto_hover = 0
+let g:ycm_auto_hover = ''
+if match(getcwd(), "^/mnt/") == 0
+    let g:ycm_clangd_binary_path = '/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/Llvm/bin/clangd.exe'
+    let g:ycm_clangd_args = ['--path-mappings=/mnt/c=/c:']
+endif
 
 let g:pymode = 0
 let g:pymode_folding = 0
-
-execute pathogen#infect()
-execute pathogen#helptags()
 
 function! MyStatusLine()
     return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
@@ -247,8 +252,6 @@ nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
 " execute current buffer
 nnoremap <F5> :!%<cr>
-autocmd FileType c nnoremap <F5> :make test<CR>
-autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
 nnoremap <F9> :YcmCompleter FixIt<cr>
 " find tag
@@ -296,16 +299,9 @@ function! GitGrep(word)
     copen
     execute '!rm -f ' . tmpf
 endfunction
-function! OldGitGrep(word)
-    let m = &grepprg
-    let &grepprg = 'git grep -E $* | tr -d "\r"'
-    execute "grep " . a:word
-    copen
-    let &grepprg = m
-endfunction
 command! -nargs=1 GG :call GitGrep(<q-args>)
 nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
-nnoremap <leader><leader>y :execute "YcmCompleter GoToDefinition"<cr><cr><cr>
+nnoremap <leader>y :execute "YcmCompleter GoToDefinition"<cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
@@ -315,18 +311,18 @@ nnoremap <leader>= gg=G''zz
 " vnoremap K :m '<-2<CR>gv
 nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 
-map <leader><leader>d :set background=dark<cr>
-map <leader><leader>l :set background=light<cr>
+nnoremap <leader><leader>d :set background=dark<cr>
+nnoremap <leader><leader>l :set background=light<cr>
 
-map <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
-imap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
+noremap <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
+inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 
 function! Pandoc()
     execute "w !pandoc -f commonmark -t html | xsel"
     "execute "!pandoc -f commonmark_x -t html % | xsel"
     "execute "!pandoc -f markdown -t html % | xsel"
 endfunction
-map <leader>pd :call Pandoc()<cr>
+nnoremap <leader>pd :call Pandoc()<cr>
 
 runtime colorscheme
 

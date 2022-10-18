@@ -1,15 +1,6 @@
-[submodule "bundle/vim-colorschemes"]
-    path = bundle/vim-colorschemes
-    url = git@github.com:mrbod/vim-colorschemes.git
 [submodule "bundle/vim-vinegar"]
-	path = pack/plugins/start/vim-vinegar
+    path = pack/plugins/start/vim-vinegar
     url = https://github.com/tpope/vim-vinegar.git
-[submodule "bundle/stvim"]
-	path = bundle/stvim
-	url = git@github.com:mrbod/stvim.git
-[submodule "bundle/tlib_vim"]
-	path = bundle/tlib_vim
-	url = https://github.com/tomtom/tlib_vim.git
 [submodule "pack/plugins/start/editorconfig-vim"]
-	path = pack/plugins/start/editorconfig-vim
-	url = https://github.com/editorconfig/editorconfig-vim.git
+    path = pack/plugins/start/editorconfig-vim
+    url = https://github.com/editorconfig/editorconfig-vim.git

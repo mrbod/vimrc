@@ -193,10 +193,13 @@ let dircolors_is_slackware = 1
 autocmd CompleteDone * pclose
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
-let g:ycm_show_diagnostics_ui = 0
+
+set signcolumn=no
+let g:ycm_show_diagnostics_ui = 1
+let g:ycm_enable_diagnostic_signs = 1
 "let g:ycm_server_keep_logfiles = 1
 "let g:ycm_server_log_level = 'debug'
-"let g:ycm_auto_hover = 0
+let g:ycm_auto_hover = ''
 
 let g:pymode = 0
 let g:pymode_folding = 0
@@ -334,6 +337,9 @@ map <leader><leader>l :set background=light<cr>
 
 map <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
 imap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
+
+" fzf
+nmap <c-t> :FZF<cr>
 
 function! Pandoc()
     execute "w !pandoc -f commonmark -t html | xsel"

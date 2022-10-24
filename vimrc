@@ -1,6 +1,7 @@
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
+set encoding=utf-8
 
 let mapleader = ","
 let maplocalleader = ","
@@ -158,11 +159,11 @@ augroup END
 augroup fastcad_stuff
     autocmd!
     "let fcw_cmd = '%!fcw_dump -x -v -v'
-    "let fcw_cmd = '%!fcw_dump -T -v -v'
+    let fcw_cmd = '%!fcw_dump -T -v -v'
     "let fcw_cmd = '%!fcw_dump -x -v'
     "let fcw_cmd = '%!fcw_dump -v'
     "let fcw_cmd = '%!fcw_dump'
-    let fcw_cmd = '%!fcw_dump -T'
+    "let fcw_cmd = '%!fcw_dump -T'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
@@ -215,8 +216,6 @@ augroup END
 " noremap <Right> <Nop>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
-" create c/cpp header cruft
-"nnoremap <leader>H GO#ifndef
 " underline headings for example
 nnoremap <leader><leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader><leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
@@ -225,17 +224,10 @@ inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 " soft wrapped line movement
 "nnoremap j gj
 "nnoremap k gk
-" previous buffer
-"nnoremap <C-e> :e#<CR>
-nnoremap <C-e> <c-^>
 " buffer movement
+nnoremap <c-¨> <c-^>
 nnoremap <C-S-n> :bprev<cr>
 nnoremap <C-n> :bnext<cr>
-" window movement
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>w
-nnoremap <C-k> <C-w>W
-nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " vimdiff mappings
@@ -263,26 +255,16 @@ nnoremap <leader>p :tprev<CR>
 nnoremap <space> :nohlsearch<cR>
 " set executable bit
 nnoremap <leader>x :!chmod +x %<cr>
-" upper/lower case
-inoremap <c-u> <esc>viwUi
-inoremap <c-l> <esc>viwui
-" goto beginning/end
-inoremap <c-b> <esc>bi
-inoremap <c-e> <esc>ea
 " edit ~/.vimrc
 nnoremap <leader>rc :split $MYVIMRC<CR>
 nnoremap <leader>rcs :source $MYVIMRC<CR>
 nnoremap <leader>rcl :split .vimrc<CR>
 nnoremap <leader>rcls :source .vimrc<CR>
-" source current buffer
-nnoremap <leader>bs :source %<CR>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
 inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
-" inoremap <esc> <nop>
-inoremap <M-Space> <esc>
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
@@ -301,7 +283,6 @@ function! GitGrep(word)
 endfunction
 command! -nargs=1 GG :call GitGrep(<q-args>)
 nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
-nnoremap <leader>y :execute "YcmCompleter GoToDefinition"<cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
@@ -317,12 +298,35 @@ nnoremap <leader><leader>l :set background=light<cr>
 noremap <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
 inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 
+" fzf
+nnoremap _ :FZF<cr>
+
 function! Pandoc()
     execute "w !pandoc -f commonmark -t html | xsel"
     "execute "!pandoc -f commonmark_x -t html % | xsel"
     "execute "!pandoc -f markdown -t html % | xsel"
 endfunction
 nnoremap <leader>pd :call Pandoc()<cr>
+
+function! YcmTag()
+	" Store where we're jumping from before we jump.
+	let tag = expand('<cword>')
+	let pos = [bufnr()] + getcurpos()[1:]
+	let item = {'bufnr': pos[0], 'from': pos, 'tagname': tag}
+	execute('YcmCompleter GoTo ' . tag)
+	let new_pos = [bufnr()] + getcurpos()[1:]
+        let res = new_pos != pos
+	if res
+		" Jump was successful, write previous location to tag stack.
+		let winid = win_getid()
+		let stack = gettagstack(winid)
+		let stack['items'] = [item]
+		call settagstack(winid, stack, 't')
+	endif
+endfunction
+
+"nnoremap <leader>y :execute "YcmCompleter GoToDefinition"<cr>
+nnoremap <leader>y :call YcmTag()<cr>
 
 runtime colorscheme
 

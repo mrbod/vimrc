@@ -112,19 +112,6 @@ function! CSUP()
     execute ':cscope reset'
 endfunction
 
-inoremap <silent> <Bar> <Bar><Esc>:call Per()<CR>a
-
-function! Per()
-  let p = '^\s*|\s.*\s|\s*$'
-  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-    Tabularize /|/l1
-    normal! 0
-    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-  endif
-endfunction
-
 augroup scons_stuff
     autocmd!
     autocmd BufRead,BufNewFile SConstruct set filetype=python
@@ -194,18 +181,14 @@ autocmd CompleteDone * pclose
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
-set signcolumn=no
 let g:ycm_show_diagnostics_ui = 1
 let g:ycm_enable_diagnostic_signs = 1
-"let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_keep_logfiles = 0
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_hover = ''
 
 let g:pymode = 0
 let g:pymode_folding = 0
-
-execute pathogen#infect()
-execute pathogen#helptags()
 
 function! MyStatusLine()
     return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
@@ -227,8 +210,6 @@ augroup END
 " noremap <Right> <Nop>
 " open c/cpp header
 nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(pp\)\?$', '.h', ''))<cr><cr>
-" create c/cpp header cruft
-"nnoremap <leader>H GO#ifndef
 " underline headings for example
 nnoremap <leader><leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader><leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
@@ -237,17 +218,10 @@ inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 " soft wrapped line movement
 "nnoremap j gj
 "nnoremap k gk
-" previous buffer
-"nnoremap <C-e> :e#<CR>
-nnoremap <C-e> <c-^>
 " buffer movement
+nnoremap <C-¨> <c-^>
 nnoremap <C-S-n> :bprev<cr>
 nnoremap <C-n> :bnext<cr>
-" window movement
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>w
-nnoremap <C-k> <C-w>W
-nnoremap <C-l> <C-w>l
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " vimdiff mappings
@@ -264,8 +238,6 @@ nnoremap <F16> :cprev<CR>
 nnoremap [1;6S :cfirst<CR>
 " execute current buffer
 nnoremap <F5> :!%<cr>
-autocmd FileType c nnoremap <F5> :make test<CR>
-autocmd FileType cpp nnoremap <F5> :make test<CR>
 nnoremap <F7> :make<CR>
 nnoremap <F9> :YcmCompleter FixIt<cr>
 " find tag
@@ -277,26 +249,16 @@ nnoremap <leader>p :tprev<CR>
 nnoremap <space> :nohlsearch<cR>
 " set executable bit
 nnoremap <leader>x :!chmod +x %<cr>
-" upper/lower case
-inoremap <c-u> <esc>viwUi
-inoremap <c-l> <esc>viwui
-" goto beginning/end
-inoremap <c-b> <esc>bi
-inoremap <c-e> <esc>ea
 " edit ~/.vimrc
 nnoremap <leader>rc :split $MYVIMRC<CR>
 nnoremap <leader>rcs :source $MYVIMRC<CR>
 nnoremap <leader>rcl :split .vimrc<CR>
 nnoremap <leader>rcls :source .vimrc<CR>
-" source current buffer
-nnoremap <leader>bs :source %<CR>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
 inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
-" inoremap <esc> <nop>
-inoremap <M-Space> <esc>
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
@@ -313,16 +275,8 @@ function! GitGrep(word)
     copen
     execute '!rm -f ' . tmpf
 endfunction
-function! OldGitGrep(word)
-    let m = &grepprg
-    let &grepprg = 'git grep -E $* | tr -d "\r"'
-    execute "grep " . a:word
-    copen
-    let &grepprg = m
-endfunction
 command! -nargs=1 GG :call GitGrep(<q-args>)
 nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
-nnoremap <leader><leader>y :execute "YcmCompleter GoToDefinition"<cr><cr><cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
 " indent buffer
@@ -332,14 +286,14 @@ nnoremap <leader>= gg=G''zz
 " vnoremap K :m '<-2<CR>gv
 nnoremap <leader>l :execute "echo " . len(expand("<cword>")) . ""<cr>
 
-map <leader><leader>d :set background=dark<cr>
-map <leader><leader>l :set background=light<cr>
+nnoremap <leader><leader>d :set background=dark<cr>
+nnoremap <leader><leader>l :set background=light<cr>
 
-map <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
-imap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
+noremap <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
+inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 
 " fzf
-nmap <c-t> :FZF<cr>
+nnoremap <c-t> :FZF<cr>
 
 function! Pandoc()
     execute "w !pandoc -f commonmark -t html | xsel"

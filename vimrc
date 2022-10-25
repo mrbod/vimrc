@@ -16,18 +16,14 @@ set wildignore=*~
 
 augroup syscheck
     let uname = substitute(system('uname'),'\n','','')
-    let rc = "~/.vim/vimrc"
     if uname == 'Linux'
         let lines = readfile("/proc/version")
         if lines[0] =~ "icrosoft"
-            let rc = rc . ".wsl"
+            source ~/.vim/vimrc.wsl
         else
-            let rc = rc . "linux"
+            source ~/.vim/vimrc.linux
         endif
-    else
-        let rc = rc . "linux"
     endif
-    exec "source " . rc
 augroup END
 
 set backup              " keep a backup file

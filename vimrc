@@ -16,16 +16,18 @@ set wildignore=*~
 
 augroup syscheck
     let uname = substitute(system('uname'),'\n','','')
+    let rc = "~/.vim/vimrc"
     if uname == 'Linux'
         let lines = readfile("/proc/version")
         if lines[0] =~ "icrosoft"
-            source vimrc.wsl
+            let rc = rc . ".wsl"
         else
-            source vimrc.linux
+            let rc = rc . "linux"
         endif
     else
-        source vimrc.linux
+        let rc = rc . "linux"
     endif
+    exec "source " . rc
 augroup END
 
 set backup              " keep a backup file
@@ -157,15 +159,12 @@ let dircolors_is_slackware = 1
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
+" also check vimrc.wsl
 let g:ycm_show_diagnostics_ui = 1
 let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_server_keep_logfiles = 0
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_hover = ''
-if match(getcwd(), "^/mnt/") == 0
-    let g:ycm_clangd_binary_path = '/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/Llvm/bin/clangd.exe'
-    let g:ycm_clangd_args = ['--path-mappings=/mnt/c=/c:']
-endif
 
 let g:pymode = 0
 let g:pymode_folding = 0
@@ -300,7 +299,7 @@ function! YcmTag()
 endfunction
 
 "nnoremap <leader>y :execute "YcmCompleter GoToDefinition"<cr>
-nnoremap <leader>y :call YcmTag()<cr>
+nnoremap <silent> <leader>y :call YcmTag()<cr>
 
 runtime colorscheme
 

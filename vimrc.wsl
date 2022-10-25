@@ -5,4 +5,9 @@ set shellpipe=\ 2>&1\ \|\ tee\ %s;\ exit\ \${PIPESTATUS[0]}
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
+if match(getcwd(), "^/mnt/") == 0
+    "let g:ycm_clangd_binary_path = system('which clangd.exe')
+    let g:ycm_clangd_binary_path = '/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/Llvm/bin/clangd.exe'
+    let g:ycm_clangd_args = ['--path-mappings=/mnt/c=/c:']
+endif
 

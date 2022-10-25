@@ -14,23 +14,17 @@ set wildmenu
 set wildmode=full
 set wildignore=*~
 
-function! IsWSL()
+augroup syscheck
     let uname = substitute(system('uname'),'\n','','')
     if uname == 'Linux'
         let lines = readfile("/proc/version")
         if lines[0] =~ "icrosoft"
-            return 1
+            source vimrc.wsl
+        else
+            source vimrc.linux
         endif
-    endif
-    return 0
-endfunction
-
-augroup wsl
-    " wsl special
-    if IsWSL()
-        set wildignorecase
-        set fileignorecase
-        set shellpipe=\ 2>&1\ \|\ tee\ %s;\ exit\ \${PIPESTATUS[0]}
+    else
+        source vimrc.linux
     endif
 augroup END
 
@@ -52,15 +46,6 @@ set spelllang=en_gb
 
 if has('mouse')
     set mouse=a
-endif
-
-if has("win32")
-    let os = "Windows"
-else
-    let os = substitute(system('uname'), "\n", "", "")
-    if os =~ "CYGWIN.*"
-        let os = "Cygwin"
-    endif
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -107,18 +92,6 @@ function! CSUP()
     execute ':!cscope -b ' . g:CSextra
     execute ':cscope reset'
 endfunction
-
-augroup scons_stuff
-    autocmd!
-    autocmd BufRead,BufNewFile SConstruct set filetype=python
-    autocmd BufRead,BufNewFile SConscript set filetype=python
-augroup END
-
-augroup arduino_stuff
-    autocmd!
-    autocmd BufRead,BufNewFile *.pde set filetype=cpp
-    autocmd BufRead,BufNewFile *.ino set filetype=cpp
-augroup END
 
 autocmd BufRead,BufNewFile *.mnu set filetype=mnu
 
@@ -184,7 +157,8 @@ let dircolors_is_slackware = 1
 
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
-let g:ycm_show_diagnostics_ui = 0
+let g:ycm_show_diagnostics_ui = 1
+let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_server_keep_logfiles = 0
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_hover = ''

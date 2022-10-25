@@ -1,0 +1,8 @@
+set wildignorecase
+set fileignorecase
+set shellpipe=\ 2>&1\ \|\ tee\ %s;\ exit\ \${PIPESTATUS[0]}
+
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+

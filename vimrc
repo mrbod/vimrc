@@ -36,6 +36,9 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
+highlight ColorColumn ctermbg=red
+call matchadd('ColorColumn', '\%81v', 100)
+
 " execute local .vimrc
 set exrc
 
@@ -130,11 +133,11 @@ augroup END
 augroup fastcad_stuff
     autocmd!
     "let fcw_cmd = '%!fcw_dump -x -v -v'
-    let fcw_cmd = '%!fcw_dump -T -v -v'
+    "let fcw_cmd = '%!fcw_dump -T -v -v'
     "let fcw_cmd = '%!fcw_dump -x -v'
     "let fcw_cmd = '%!fcw_dump -v'
     "let fcw_cmd = '%!fcw_dump'
-    "let fcw_cmd = '%!fcw_dump -T'
+    let fcw_cmd = '%!fcw_dump -T'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
@@ -156,21 +159,35 @@ let dircolors_is_slackware = 1
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
 " also check vimrc.wsl
+let g:ycm_enable_inlay_hints = 0
+"let g:ycm_echo_current_diagnostic = 'virtual-text'
+let g:ycm_show_detailed_diag_in_popup = 1
 let g:ycm_show_diagnostics_ui = 1
-let g:ycm_enable_diagnostic_signs = 1
+let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_server_keep_logfiles = 0
-"let g:ycm_server_log_level = 'debug'
-let g:ycm_auto_hover = ''
+let g:ycm_server_log_level = 'debug'
+let g:ycm_auto_hover = '' "'CursorHold'
+
+nmap <leader>w <Plug>(YCMFindSymbolInWorkspace)
+nmap <leader>W <Plug>(YCMFindSymbolInDocument)
+nnoremap <leader>D :YcmShowDetailedDiagnostic<cr>
 
 let g:pymode = 0
 let g:pymode_folding = 0
 
 function! MyStatusLine()
-    return '%.30F%m%r %y%=%B %3c-%-3v %l/%L'
+    return '%.30F%m%r %y%=%B %3v-%-3c %l/%L'
 endfunction
 
 set laststatus=2
 set statusline=%!MyStatusLine()
+
+" airline
+let g:airline_detect_spelllang='flag'
+let g:airline_powerline_fonts = 1
+"let g:airline_section_b = '%-0.10{getcwd()}'
+let g:airline_section_z='%B %v-%-c %l/%L'
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
 
 " TDD
 augroup tdd_style_autocmds
@@ -271,31 +288,47 @@ inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 nnoremap _ :FZF<cr>
 
 function! Pandoc()
-    execute "w !pandoc -f commonmark -t html | xsel"
+    execute "w !pandoc -f commonmark -t pdf -o " . expand('%:t:r') . ".pdf"
+    "execute "w !pandoc -f commonmark -t html | xsel"
     "execute "!pandoc -f commonmark_x -t html % | xsel"
     "execute "!pandoc -f markdown -t html % | xsel"
 endfunction
 nnoremap <leader>pd :call Pandoc()<cr>
 
 function! YcmTag()
-	" Store where we're jumping from before we jump.
-	let tag = expand('<cword>')
-	let pos = [bufnr()] + getcurpos()[1:]
-	let item = {'bufnr': pos[0], 'from': pos, 'tagname': tag}
-	execute('YcmCompleter GoTo ' . tag)
-	let new_pos = [bufnr()] + getcurpos()[1:]
-        let res = new_pos != pos
-	if res
-		" Jump was successful, write previous location to tag stack.
-		let winid = win_getid()
-		let stack = gettagstack(winid)
-		let stack['items'] = [item]
-		call settagstack(winid, stack, 't')
-	endif
+    " Store where we're jumping from before we jump.
+    let tag = expand('<cword>')
+    let pos = [bufnr()] + getcurpos()[1:]
+    let item = {'bufnr': pos[0], 'from': pos, 'tagname': tag}
+    execute('YcmCompleter GoTo ' . tag)
+    let new_pos = [bufnr()] + getcurpos()[1:]
+    let res = new_pos != pos
+    if res
+        " Jump was successful, write previous location to tag stack.
+        let winid = win_getid()
+        let stack = gettagstack(winid)
+        let stack['items'] = [item]
+        call settagstack(winid, stack, 't')
+    endif
 endfunction
 
 "nnoremap <leader>y :execute "YcmCompleter GoToDefinition"<cr>
-nnoremap <silent> <leader>y :call YcmTag()<cr>
+nnoremap <silent> <leader>d :call YcmTag()<cr>
+nnoremap <silent> <c-cr> :call YcmTag()<cr>
+nnoremap <silent> <c-s-cr> <c-t>
+nnoremap <silent> <leader>r :YcmCompleter GoToReferences<cr>
+
+" vimtex
+let g:vimtex_view_method = 'zathura'
+let g:tex_flavor='latex'
+let g:vimtex_quickfix_mode=0
+set conceallevel=0
+let g:tex_conceal='abdmg'
+
+" Ultisnips
+"let g:UltiSnipsExpandTrigger="<S-t>"
+"let g:UltiSnipsJumpForwardTrigger="<S-f>"
+"let g:UltiSnipsJumpBackwardTrigger="<S-b>"
 
 runtime colorscheme
 

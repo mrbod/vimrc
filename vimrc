@@ -159,18 +159,21 @@ let dircolors_is_slackware = 1
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
 " also check vimrc.wsl
-let g:ycm_enable_inlay_hints = 0
+let g:ycm_enable_inlay_hints = 1
 "let g:ycm_echo_current_diagnostic = 'virtual-text'
 let g:ycm_show_detailed_diag_in_popup = 1
+let g:ycm_rust_toolchain_root = '/home/per/.rustup/toolchains/stable-x86_64-unknown-linux-gnu'
 let g:ycm_show_diagnostics_ui = 1
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_server_keep_logfiles = 0
-let g:ycm_server_log_level = 'debug'
+"let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_hover = '' "'CursorHold'
 
-nmap <leader>w <Plug>(YCMFindSymbolInWorkspace)
-nmap <leader>W <Plug>(YCMFindSymbolInDocument)
+nnoremap <silent> <leader>i <Plug>(YCMToggleInlayHints)
+nnoremap <leader>w <Plug>(YCMFindSymbolInWorkspace)
+nnoremap <leader>W <Plug>(YCMFindSymbolInDocument)
 nnoremap <leader>D :YcmShowDetailedDiagnostic<cr>
+nnoremap <leader>m :YcmCompleter GetDoc<cr>
 
 let g:pymode = 0
 let g:pymode_folding = 0

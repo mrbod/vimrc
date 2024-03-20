@@ -9,6 +9,9 @@ let maplocalleader = ","
 set undofile
 set undodir=~/.vim/undodir
 
+set backup              " keep a backup file
+set backupdir=~/.vim/backup//,.
+
 set path+=**
 set wildmenu
 set wildmode=full
@@ -26,7 +29,6 @@ augroup syscheck
     endif
 augroup END
 
-set backup              " keep a backup file
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
@@ -36,8 +38,8 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-highlight ColorColumn ctermbg=red
-call matchadd('ColorColumn', '\%81v', 100)
+"highlight ColorColumn ctermbg=red
+"call matchadd('ColorColumn', '\%81v', 100)
 
 " execute local .vimrc
 set exrc
@@ -116,7 +118,6 @@ augroup xlsx_stuff
       let fn   = expand('%:p')
       let xlsx_cmd = '/home/per/bin/xlsx'
       let cmd = "silent !" . xlsx_cmd . " " . shellescape(a:fname,1) . " > " . temp
-      "let cmd = "silent !" . xlsx_cmd . " " . shellescape(fnameescape(a:fname),1) . " > " . temp
       echo cmd
       exe cmd
       sil exe 'keepalt file '.temp
@@ -126,7 +127,9 @@ augroup xlsx_stuff
       set nomod
       set readonly
     endfun
+    autocmd BufReadPost,FileReadPost *.xlsx setlocal noswapfile
     autocmd BufReadPost,FileReadPost *.xlsx call XLSXRead(expand("<amatch>"))
+    autocmd BufReadPost,FileReadPost *.xlsm setlocal noswapfile
     autocmd BufReadPost,FileReadPost *.xlsm call XLSXRead(expand("<amatch>"))
 augroup END
 
@@ -135,18 +138,22 @@ augroup fastcad_stuff
     "let fcw_cmd = '%!fcw_dump -x -v -v'
     "let fcw_cmd = '%!fcw_dump -T -v -v'
     "let fcw_cmd = '%!fcw_dump -x -v'
-    "let fcw_cmd = '%!fcw_dump -v'
+    "let fcw_cmd = '%!fcw_dump -v -v'
+    let fcw_cmd = '%!fcw_dump -v'
     "let fcw_cmd = '%!fcw_dump'
-    let fcw_cmd = '%!fcw_dump -T'
+    "let fcw_cmd = '%!fcw_dump -T'
     autocmd BufReadPre,FileReadPre *.fcw set bin
     autocmd BufReadPost,FileReadPost *.fcw execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fcw set readonly
+    autocmd BufReadPost,FileReadPost *.fcw setlocal noswapfile
     autocmd BufReadPre,FileReadPre *.fc$ set bin
     autocmd BufReadPost,FileReadPost *.fc$ execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fc$ set readonly
+    autocmd BufReadPost,FileReadPost *.fc$ setlocal noswapfile
     autocmd BufReadPre,FileReadPre *.fct set bin
     autocmd BufReadPost,FileReadPost *.fct execute fcw_cmd
     autocmd BufReadPost,FileReadPost *.fct set readonly
+    autocmd BufReadPost,FileReadPost *.fct setlocal noswapfile
 augroup END
 
 " Make vim work with the 'crontab -e' command
@@ -159,7 +166,8 @@ let dircolors_is_slackware = 1
 set suffixes=.bak,~,.o,.pyc,.info,.swp,.obj,.map,.lst,.size,.d,.zip,.hex,.elf,.exe
 
 " also check vimrc.wsl
-let g:ycm_enable_inlay_hints = 1
+let g:ycm_enable_inlay_hints = 0
+let g:ycm_clear_inlay_hints_in_insert_mode = 1
 "let g:ycm_echo_current_diagnostic = 'virtual-text'
 let g:ycm_show_detailed_diag_in_popup = 1
 let g:ycm_rust_toolchain_root = '/home/per/.rustup/toolchains/stable-x86_64-unknown-linux-gnu'
@@ -208,8 +216,8 @@ nnoremap <leader>h :execute "edit " . fnameescape(substitute(expand('%'), '\.c\(
 " underline headings for example
 nnoremap <leader><leader>= yyp:s/./=/g<cr>:nohlsearch<cr>
 nnoremap <leader><leader>- yyp:s/./-/g<cr>:nohlsearch<cr>
-inoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>o
-inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
+"inoremap <leader>= yyp:s/./=/g<cr>:nohlsearch<cr>o
+"inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 " soft wrapped line movement
 "nnoremap j gj
 "nnoremap k gk
@@ -217,6 +225,16 @@ inoremap <leader>- yyp:s/./-/g<cr>:nohlsearch<cr>o
 nnoremap <c-¨> <c-^>
 nnoremap <C-S-n> :bprev<cr>
 nnoremap <C-n> :bnext<cr>
+nnoremap <leader>1 :b 1<cr>
+nnoremap <leader>2 :b 2<cr>
+nnoremap <leader>3 :b 3<cr>
+nnoremap <leader>4 :b 4<cr>
+nnoremap <leader>5 :b 5<cr>
+nnoremap <leader>6 :b 6<cr>
+nnoremap <leader>7 :b 7<cr>
+nnoremap <leader>8 :b 8<cr>
+nnoremap <leader>9 :b 9<cr>
+nnoremap <leader>0 :b 10<cr>
 " callgraph
 nnoremap <leader>C :!callgraph <C-R><C-W> *.c *.cpp *.h \| dot -Tx11<CR>
 " vimdiff mappings
@@ -240,6 +258,8 @@ nnoremap <leader>t :exec "tag " . expand("<cword>")<cr>
 " tag next/prev
 nnoremap <leader>n :tnext<CR>
 nnoremap <leader>p :tprev<CR>
+" set window size to number of rows
+nnoremap ,,s G:exec "resize " . line(".")<CR>
 " turn of hilight
 nnoremap <space> :nohlsearch<cR>
 " set executable bit
@@ -252,15 +272,15 @@ nnoremap <leader>rcls :source .vimrc<CR>
 " quote word
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
-inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
+"inoremap <leader>" hviw<esc>a"<esc>hbi"<esc>lela
+"inoremap <leader>' hviw<esc>a'<esc>hbi'<esc>lela
 " split open previous buffer
 nnoremap <leader>op :execute "below split " . bufname("#")<CR>
 " grep word under cursor
 let g:CGrepFiles=" --include='*.h' --include='*.c' --include='*.cpp' "
 function! GitGrep(word)
     let tmpf = tempname()
-    let cmd = '!git grep -E ' . a:word . ' 2>/dev/null | tr -d "\r" | tee ' . tmpf
+    let cmd = '!git grep ' . a:word . ' 2>/dev/null | tr -d "\r" | tee ' . tmpf
     execute cmd
     let ef = &errorformat
     let &errorformat = &grepformat
@@ -270,7 +290,7 @@ function! GitGrep(word)
     copen
     execute '!rm -f ' . tmpf
 endfunction
-command! -nargs=1 GG :call GitGrep(<q-args>)
+command! -nargs=1 -complete=file GG :call GitGrep(<q-args>)
 nnoremap <leader><leader>g :execute "GG -w " . shellescape(expand("<cword>"))<cr><cr><cr>
 nnoremap <leader>q :execute "grep -w -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>
 "nnoremap <leader>q :execute "silent grep! -r " . g:CGrepFiles . shellescape(expand("<cword>")) . " ."<CR>:copen<CR>
@@ -285,18 +305,30 @@ nnoremap <leader><leader>d :set background=dark<cr>
 nnoremap <leader><leader>l :set background=light<cr>
 
 noremap <leader><leader>f :py3f /home/per/bin/clang-format.py<cr>
-inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
+"inoremap <leader><leader>f <c-o>:py3f /home/per/bin/clang-format.py<cr>
 
 " fzf
 nnoremap _ :FZF<cr>
 
-function! Pandoc()
+command XMLPretty :%!python3 -c "import xml.dom.minidom as md, sys; print(md.parse(sys.stdin).toprettyxml())"
+
+function! PandocPDF()
     execute "w !pandoc -f commonmark -t pdf -o " . expand('%:t:r') . ".pdf"
-    "execute "w !pandoc -f commonmark -t html | xsel"
+endfunction
+function! PandocDOCX()
+    execute "w !pandoc -f commonmark -t docx -o " . expand('%:t:r') . ".docx"
+endfunction
+function! PandocHTML()
+    execute "w !pandoc -f commonmark -t html -o " . expand('%:t:r') . ".html"
+endfunction
+function! Pandoc()
+    execute "w !pandoc -f commonmark -t html | xsel"
     "execute "!pandoc -f commonmark_x -t html % | xsel"
     "execute "!pandoc -f markdown -t html % | xsel"
 endfunction
 nnoremap <leader>pd :call Pandoc()<cr>
+nnoremap <leader>pdp :call PandocPDF()<cr>
+nnoremap <leader>pdh :call PandocHTML()<cr>
 
 function! YcmTag()
     " Store where we're jumping from before we jump.
